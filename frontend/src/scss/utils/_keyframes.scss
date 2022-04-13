@@ -1,0 +1,10 @@
+@keyframes fadeIn {
+    0%   { opacity: 0 }
+    100% { opacity: 100%; }
+ }
+
+ @keyframes shake {
+    0%, 100% { margin-left: 0 }
+    20%, 80% { margin-left: -12px }
+    40%, 60% { margin-left: 12px }
+ }

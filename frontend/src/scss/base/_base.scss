@@ -1,0 +1,33 @@
+//BASE
+*,
+*::after,
+*::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+#app {
+  background-image: $bg-shade1;
+}
+
+//WELCOME
+#welcome-msg {
+  font-size: 25px;
+  color: $white;
+  font-weight: normal;
+  position: absolute;
+  cursor: default;
+  transition: 0.5s;
+  animation: fadeIn 0.5s 1s;
+
+  &:hover {
+    text-shadow: 0 0 20px #fff, 0 0 40px #fff, 0 0 60px #fff;
+  }
+}
+
+#particles-js {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #db6870, #091f43);
+}

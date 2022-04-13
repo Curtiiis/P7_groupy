@@ -1,0 +1,19 @@
+.valid-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  background: $white-tr;
+  backdrop-filter: blur(2px);
+  z-index: 20;
+  border-radius: 10px;
+  width: 480px;
+  height: 660px;
+  animation: fadeIn 0.3s;
+
+  img {
+    width: 100px;
+    height: 100px;
+    animation: fadeIn 0.3s;
+  }
+}

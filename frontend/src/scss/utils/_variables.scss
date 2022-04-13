@@ -1,0 +1,25 @@
+$red: #f00;
+$pink: #db6870;
+$orange: #ed765e;
+$green: #27c38b;
+$blue: #2b94da;
+$blue-dark: #091f43;
+$white: #fff;
+$white-fake: #fafafa;
+$grey1: #adadad;
+$grey2: #666;
+$white-tr: #ffffff62;
+
+$bg-shade1: linear-gradient(
+  120deg,
+  #ed765e 15%,
+  $blue-dark 80%,
+  $blue-dark 100%
+);
+$bg-shade2: linear-gradient(270deg, $orange, $blue-dark);
+
+/* BREAKPOINTS MAP */
+$breakpoints: (
+  tablet: 768px,
+  desktop: 975px,
+);

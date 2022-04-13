@@ -1,0 +1,18 @@
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* PLACEHOLDERS MEDIA QUERIES */
+@mixin mq-tablet {
+  @media screen and (min-width: map-get($breakpoints, tablet)) {
+    @content;
+  }
+}
+
+@mixin mq-desktop {
+  @media screen and (min-width: map-get($breakpoints, desktop)) {
+    @content;
+  }
+}

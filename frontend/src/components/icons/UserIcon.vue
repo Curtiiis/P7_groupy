@@ -1,0 +1,34 @@
+<template>
+  <svg
+    class="user-icon"
+    :class="{ orange: orangeIcon }"
+    id="user-icon"
+    viewBox="0 0 35 35"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M16 17a8 8 0 1 1 8-8 8 8 0 0 1-8 8Zm0-14a6 6 0 1 0 6 6 6 6 0 0 0-6-6ZM23 31H9a5 5 0 0 1-5-5v-4a1 1 0 0 1 .49-.86l5-3a1 1 0 0 1 1 1.72L6 22.57V26a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-3.43l-4.51-2.71a1 1 0 1 1 1-1.72l5 3A1 1 0 0 1 28 22v4a5 5 0 0 1-5 5Z"
+    ></path>
+  </svg>
+</template>
+
+<script>
+export default {
+  name: "UserIcon",
+  props: ["orangeIcon"],
+};
+</script>
+
+<style scoped lang="scss">
+svg.user-icon {
+  width: 26px;
+  fill: #344767;
+  stroke: #344767;
+  stroke-width: 0.25px;
+
+  &.orange {
+    fill: #fd7d63 !important;
+    stroke: #fd7d63 !important;
+  }
+}
+</style>
