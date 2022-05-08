@@ -25,6 +25,12 @@ svg.user-icon {
   fill: #344767;
   stroke: #344767;
   stroke-width: 0.25px;
+  cursor: pointer;
+
+  &:hover {
+    fill: #fd7d63;
+    stroke: #fd7d63;
+  }
 
   &.orange {
     fill: #fd7d63 !important;

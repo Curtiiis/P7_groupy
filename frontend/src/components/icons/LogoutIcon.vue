@@ -24,6 +24,7 @@ svg.logout-icon {
   width: 26px;
   stroke: #344767;
   stroke-width: 1.25px;
+  cursor: pointer;
   & path {
     fill: none;
   }

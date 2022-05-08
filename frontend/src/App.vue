@@ -9,19 +9,18 @@
 <script>
 //EXPORT
 export default {
-  name: "App",
+  name: 'App',
 };
 </script>
 
 <style lang="scss">
-@import "./scss/main.scss";
-// @import "./scss/utils/variables.scss";
-// @import "./scss/components/_validBox.scss";
-
+@import './scss/main.scss';
+#app {
+  min-width: 320px;
+}
 .fade-enter,
 .fade-leave-to {
   opacity: 0;
-  //   transform: translateY(-30px);
 }
 
 .fade-enter-active,
