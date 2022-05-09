@@ -4,7 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon app.js"
+    "start2": "nodemon app.js",
+    "start": "node app.js"
   },
   "author": "",
   "license": "ISC",
@@ -27,5 +28,8 @@
     "nodemon": "^2.0.15",
     "password-validator": "^5.2.1",
     "serve-static": "^1.15.0"
+  },
+  "engines": {
+    "node": "14.x"
   }
 }
