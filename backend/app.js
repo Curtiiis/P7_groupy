@@ -7,7 +7,7 @@ const authRoute = require('./routes/auth.routes');
 const userRoutes = require('./routes/user.routes');
 const postsRoutes = require('./routes/post.routes');
 const commentRoute = require('./routes/comment.routes');
-const User = require('./firebase')
+// const User = require('./firebase')
 
 //CORS
 app.use(cors);
@@ -31,7 +31,7 @@ app.post('/create', async (req, res) => {
 
 app.listen(process.env.PORT, (err) => {
   if (err) throw err;
-  //console.log("Server listening on port " + process.env.PORT);
+  console.log("Server listening on port " + process.env.PORT);
 });
 
 module.exports = app;
