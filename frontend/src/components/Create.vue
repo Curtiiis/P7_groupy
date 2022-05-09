@@ -154,8 +154,8 @@ export default {
           this.resetCreateState();
           EventBus.$emit('getAllPosts');
         })
-        .catch((error) => {
-          console.log(error);
+        .catch(() => {
+          //console.log(error);
           this.resetCreateState();
           utils.showErrorBoxTimer(700);
         });
@@ -177,7 +177,7 @@ export default {
           this.resetCreateState();
           EventBus.$emit('getAllPosts');
         })
-        .catch((error) => console.log(error));
+        .catch((err) => err);
     },
   },
   computed: {

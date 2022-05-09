@@ -155,14 +155,14 @@ export default {
           this.suggestionsX.filter((x) => x.userId == item.userId).forEach((x) => (x.followed = !x.followed));
           this.userFollowers.filter((x) => x.userId == item.userId).forEach((x) => (x.followed = !x.followed));
         })
-        .catch((error) => console.log(error));
+        .catch((err) => err);
     },
 
     getSuggestions() {
       http
         .get(`user/suggestions/${this.userId}`, this.setAuthorization())
         .then((response) => utils.commitSuggestions(response.data))
-        .catch((error) => console.log(error));
+        .catch((err) => err);
     },
 
     closeAccount() {
@@ -181,7 +181,7 @@ export default {
           utils.commitUserData(res.data.userInfos);
           utils.commitSaves(res.data.dataSaves);
         })
-        .catch((error) => console.log(error));
+        .catch((err) => err);
     },
 
     getUserProfile(post) {
@@ -203,7 +203,7 @@ export default {
           utils.scrollToTop();
           utils.showLoader(false, 500);
         })
-        .catch((error) => console.log(error));
+        .catch((err) => err);
     },
 
     getAllPosts() {
@@ -222,8 +222,8 @@ export default {
           utils.showLoader(false, 500);
           utils.scrollToTop();
         })
-        .catch((error) => {
-          console.log(error);
+        .catch(() => {
+          //console.log(error);
         });
       this.getCurrentUser();
     },
@@ -239,8 +239,8 @@ export default {
           utils.showLoader(false, 300);
           utils.scrollToTop();
         })
-        .catch((error) => {
-          console.log(error);
+        .catch(() => {
+          //console.log(error);
         });
     },
 
@@ -266,10 +266,10 @@ export default {
       http
         .put(`user/${user.userId}`, {}, this.setAuthorization())
         .then(() => {
-          console.log('Au revoir ' + user.pseudo);
+          //console.log('Au revoir ' + user.pseudo);
           this.logout();
         })
-        .catch((error) => console.log(error));
+        .catch((err) => err);
     },
 
     onResize() {

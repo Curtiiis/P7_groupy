@@ -220,7 +220,7 @@ exports.changePassword = (req, res, next) => {
       let values = [hash, req.auth.userId]
       Password.update(values, (err, data) => {
         if (err) {
-          console.log(err)
+          //console.log(err)
           return res.status(400).json(err)
         }
         res.status(201).json(data);
@@ -247,7 +247,7 @@ exports.updatePicture = (req, res, next) => {
         Picture.update(
           [`${req.protocol}://${req.get('host')}/images/${req.file.filename}`, req.auth.userId], (err, picture) => {
             if (err) {
-              console.log(err)
+              //console.log(err)
               return res.status(400).json(err)
             }
             res.status(200).json(picture[0]);

@@ -150,7 +150,7 @@ export default {
         .then((response) => {
           utils.commitUserFollowers(response.data);
         })
-        .catch((error) => console.log(error));
+        .catch((err) => err);
     },
 
     getSaves() {
@@ -160,7 +160,7 @@ export default {
           this.favorites = [];
           this.favorites = response.data;
         })
-        .catch((error) => console.log(error));
+        .catch((err) => err);
     },
 
     followUser(follower) {
@@ -181,7 +181,7 @@ export default {
           utils.commitSelectedFile('');
           this.$emit('get-all-posts');
         })
-        .catch((error) => console.log(error));
+        .catch((err) => err);
     },
   },
   computed: {

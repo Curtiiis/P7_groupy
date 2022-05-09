@@ -44,8 +44,8 @@ export default {
         .then(() => {
           utils.showValidBoxTimer(700);
         })
-        .catch((err) => {
-          console.log(err);
+        .catch(() => {
+          //console.log(err);
           utils.showErrorBoxTimer(700);
         });
     },

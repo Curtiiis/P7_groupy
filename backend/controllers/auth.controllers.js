@@ -73,10 +73,8 @@ exports.login = (req, res, next) => {
             })
           })
       })
-      .catch(error => {
-        console.log('Error 500', error)
-        res.status(500).json({ message: "Erreur serveur" })
-      }
+      .catch(error =>
+        res.status(500).json({ error, message: "Erreur serveur" })
       );
   })
 };

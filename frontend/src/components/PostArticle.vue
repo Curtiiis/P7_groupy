@@ -135,7 +135,7 @@ export default {
         .then((res) => {
           res.status == 200 ? (post.likes -= 1) : (post.likes += 1);
         })
-        .catch((error) => console.log(error));
+        .catch((err) => err);
     },
 
     savePost(post) {
@@ -144,7 +144,7 @@ export default {
         .then((res) => {
           res.status == 200 ? (post.saves -= 1) : (post.saves += 1);
         })
-        .catch((error) => console.log(error));
+        .catch((err) => err);
     },
 
     createComment(post) {
@@ -161,7 +161,7 @@ export default {
           post.commentText = '';
           post.commentsCount++;
         })
-        .catch((error) => console.log(error));
+        .catch((err) => err);
     },
 
     openUpdateComment(comment) {
@@ -181,7 +181,7 @@ export default {
           comment.text = res.data;
           comment.updated = true;
         })
-        .catch((error) => console.log(error));
+        .catch((err) => err);
     },
 
     deleteComment(comment, post) {
@@ -206,7 +206,7 @@ export default {
             utils.showDeleteBoxTimer(700);
           }
         })
-        .catch((error) => console.log(error));
+        .catch((err) => err);
     },
 
     createdSince(post) {
