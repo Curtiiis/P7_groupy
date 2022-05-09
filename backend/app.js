@@ -29,7 +29,7 @@ app.post('/create', async (req, res) => {
   res.send({ msg: "User Added" })
 })
 
-app.listen(process.env.PORT, (err) => {
+app.listen(process.env.PORT || 3000, (err) => {
   if (err) throw err;
   console.log("Server listening on port " + process.env.PORT);
 });
