@@ -1,5 +1,4 @@
 const db = require('../config/db');
-// require('dotenv').config({ path: '../config/.env' });
 require('dotenv').config();
 const Comment = require('../models/comment.models');
 
@@ -15,7 +14,7 @@ exports.createComment = (req, res, next) => {
     });
     Comment.create(comment, (err, data) => {
       if (err) {
-        //console.log(err)
+        console.log(err)
         return res.status(400).json(err)
       }
       db.query("SELECT * FROM `comments_pseudo` WHERE postId = ? ORDER BY createdAt DESC", Number(req.params.id), (err, response) => {

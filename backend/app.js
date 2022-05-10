@@ -7,7 +7,6 @@ const authRoute = require('./routes/auth.routes');
 const userRoutes = require('./routes/user.routes');
 const postsRoutes = require('./routes/post.routes');
 const commentRoute = require('./routes/comment.routes');
-// const User = require('./firebase')
 
 //CORS
 app.use(cors);
@@ -23,13 +22,8 @@ app.use('/api/comment', commentRoute);
 
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
-app.post('/create', async (req, res) => {
-  const data = req.body;
-  console.log('Data of users ', data);
-  res.send({ msg: "User Added" })
-})
 
-app.listen(process.env.PORT || 3000, (err) => {
+app.listen(process.env.PORT, (err) => {
   if (err) throw err;
   console.log("Server listening on port " + process.env.PORT);
 });

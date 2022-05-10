@@ -157,7 +157,7 @@ export default {
           .then((response) => {
             this.results = response.data;
           })
-          .catch((err) => err);
+          .catch((error) => console.log(error));
       }
     },
 

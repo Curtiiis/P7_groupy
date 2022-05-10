@@ -1,4 +1,3 @@
-// require('dotenv').config({ path: '../config/.env' });
 require('dotenv').config();
 const User = require('../models/user.models');
 const jwt = require('jsonwebtoken');
@@ -73,8 +72,10 @@ exports.login = (req, res, next) => {
             })
           })
       })
-      .catch(error =>
-        res.status(500).json({ error, message: "Erreur serveur" })
+      .catch(error => {
+        console.log('Error 500', error)
+        res.status(500).json({ message: "Erreur serveur" })
+      }
       );
   })
 };

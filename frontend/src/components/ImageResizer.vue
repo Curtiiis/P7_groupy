@@ -99,7 +99,7 @@ export default {
      */
     onChange(e) {
       if (!this.changeListenerEnabled) {
-        //console.log('ignore onchange');
+        console.log('ignore onchange');
         return;
       }
       const file = e.target.files && e.target.files.length ? e.target.files[0] : null;
@@ -124,7 +124,7 @@ export default {
 
       // Don't resize if not image or doNotResize is set
       if (!isImage || doNotResize.includes('*') || doNotResize.includes(mimetype[1])) {
-        //console.log('No Resize');
+        console.log('No Resize');
         return;
       }
       const that = this;

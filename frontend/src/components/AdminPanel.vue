@@ -154,14 +154,14 @@ export default {
           }, 500);
           utils.showValidBoxTimer(700);
         })
-        .catch((err) => err);
+        .catch((err) => console.log(err));
     },
 
     getAllUsers() {
       http
         .get('user', this.setAuthorization())
         .then((response) => (this.allUsers = response.data))
-        .catch((err) => err);
+        .catch((error) => console.log(error));
     },
 
     getStatistics() {
@@ -177,14 +177,14 @@ export default {
           this.number_of_likes = res.data.likes;
           this.number_of_comments = res.data.comments;
         })
-        .catch((err) => err);
+        .catch((error) => console.log(error));
     },
 
     getReports() {
       http
         .get(`posts/reports/${this.userId}`, this.setAuthorization())
         .then((response) => (this.allReports = response.data))
-        .catch((err) => err);
+        .catch((error) => console.log(error));
     },
 
     changeAdminStatus(user) {
@@ -197,14 +197,14 @@ export default {
           let userTarget = this.allUsers.find((x) => x.userId == user.userId);
           if (res.status == 200) {
             userTarget.isAdmin = 0;
-            //console.log(user.pseudo + ' est désormais user !');
+            console.log(user.pseudo + ' est désormais user !');
           }
           if (res.status == 201) {
             userTarget.isAdmin = 1;
-            //console.log(user.pseudo + ' est désormais admin !');
+            console.log(user.pseudo + ' est désormais admin !');
           }
         })
-        .catch((err) => err);
+        .catch((error) => console.log(error));
     },
 
     disableUser(user) {
@@ -214,14 +214,14 @@ export default {
       http
         .put(`user/${user.userId}`, {}, this.setAuthorization())
         .then(() => {
-          //console.log('Compte de ' + user.pseudo + ' désactivé !');
+          console.log('Compte de ' + user.pseudo + ' désactivé !');
           const index = this.allUsers.findIndex((x) => x.userId == user.userId);
           utils.showValidBoxTimer(1000);
           setTimeout(() => {
             this.allUsers.splice(index, 1);
           }, 500);
         })
-        .catch((err) => err);
+        .catch((error) => console.log(error));
     },
 
     changeSetting(e) {

@@ -89,7 +89,7 @@
       <div class="settings-change" id="settings-change" v-show="settingShowed == 'item-change'">
         <h2>Changer le mot de passe</h2>
         <Security />
-        <Desactivate @click.native="$emit('disable-user', userDataX)" :msg="'Désactiver mon compte'" :stat="false" />
+        <Desactivate @click.native="$emit('disable-my-account', userDataX)" :msg="'Désactiver mon compte'" :stat="false" />
       </div>
     </div>
   </main>
@@ -150,7 +150,7 @@ export default {
         .then((response) => {
           utils.commitUserFollowers(response.data);
         })
-        .catch((err) => err);
+        .catch((error) => console.log(error));
     },
 
     getSaves() {
@@ -160,7 +160,7 @@ export default {
           this.favorites = [];
           this.favorites = response.data;
         })
-        .catch((err) => err);
+        .catch((error) => console.log(error));
     },
 
     followUser(follower) {
@@ -181,7 +181,7 @@ export default {
           utils.commitSelectedFile('');
           this.$emit('get-all-posts');
         })
-        .catch((err) => err);
+        .catch((error) => console.log(error));
     },
   },
   computed: {

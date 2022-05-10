@@ -29,9 +29,9 @@ var store = createStore(Vuex.Store, {
     showAdminPanel: false,
     showLoader: false,
     showValidBox: false,
+    showSaveBox: false,
     showDeleteBox: false,
     showErrorBox: false,
-    showSaveBox: false
   },
   getters: {
     tokenGetter: (state) => {
