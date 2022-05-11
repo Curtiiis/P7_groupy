@@ -153,6 +153,7 @@ export default {
           localStorage.setItem('token', response.data.token);
           utils.commitToken(response.data.token);
           utils.commitUserId(response.data.userId);
+          utils.commitIsAdmin(response.data.isAdmin);
 
           utils.showValidBox(true);
           utils.redirectDelay('/', 500);

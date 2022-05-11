@@ -210,3 +210,9 @@ export function redirectDelay(value, delay) {
 export function redirect(value) {
   router.push(value);
 }
+export function deleteItem(item) {
+  setTimeout(() => {
+    item
+  }, 500);
+  this.showDeleteBoxTimer(700);
+}

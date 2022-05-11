@@ -78,8 +78,8 @@
                 </form>
               </div>
               <div class="options-comment" v-show="!comment.updating">
-                <EditIcon @click.native="openUpdateComment(comment)" v-if="comment.userId == userId" />
-                <DeleteIcon @click.native="deleteComment(comment, post)" v-if="comment.userId == userId" />
+                <EditIcon @click.native="openUpdateComment(comment)" v-if="comment.userId == userId || isAdmin" />
+                <DeleteIcon @click.native="deleteComment(comment, post)" v-if="comment.userId == userId || isAdmin" />
               </div>
             </div>
           </div>
@@ -149,13 +149,7 @@ export default {
 
     createComment(post) {
       http
-        .post(
-          `comment/${post.postId}`,
-          {
-            text: post.commentText,
-          },
-          this.setAuthorization()
-        )
+        .post(`comment/${post.postId}`, {text: post.commentText}, this.setAuthorization())
         .then((res) => {
           post.comments = res.data.commentsArray;
           post.commentText = '';
@@ -188,23 +182,16 @@ export default {
       if (!confirm('Voulez-vous vraiment supprimer ce commentaire ?')) {
         return;
       }
-
       http
-        .delete(`comment/${comment.commentId}`, {
-          headers: {
-            Authorization: 'Bearer ' + this.token,
-          },
-        })
-        .then((response) => {
-          if (response.status == 200) {
-            setTimeout(() => {
-              let commentsArray = this.postDataX.find((x) => x.postId == post.postId).comments;
-              const index = commentsArray.findIndex((x) => x.commentId == comment.commentId);
-              commentsArray.splice(index, 1);
-              post.commentsCount--;
-            }, 500);
-            utils.showDeleteBoxTimer(700);
-          }
+        .delete(`comment/${comment.commentId}`, this.setAuthorization())
+        .then(() => {
+          setTimeout(() => {
+            let commentsArray = this.postDataX.find((x) => x.postId == post.postId).comments;
+            const index = commentsArray.findIndex((x) => x.commentId == comment.commentId);
+            commentsArray.splice(index, 1);
+            post.commentsCount--;
+          }, 500);
+          utils.showDeleteBoxTimer(700);
         })
         .catch((error) => console.log(error));
     },
@@ -245,6 +232,7 @@ export default {
     },
     ...mapState({
       createModale: 'createModale',
+      isAdmin: 'isAdmin',
       postDataX: 'postDataX',
       showDeleteBox: 'showDeleteBox',
       showValidBox: 'showValidBox',
@@ -255,6 +243,7 @@ export default {
     }),
     ...mapGetters([
       'createGetter',
+      'isAdminGetter',
       'postDataGetter',
       'deleteBoxGetter',
       'validBoxGetter',

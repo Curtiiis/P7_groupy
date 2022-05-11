@@ -32,15 +32,7 @@ User.getUserByEmail = (email, result) => {
 
 User.getUserById = (userId, result) => {
   db.query("SELECT id, picture, pseudo FROM users WHERE id = ?", userId, (err, res) => {
-    if (err) {
-      result(err, null);
-      return;
-    }
-    if (res.length === 0) {
-      result(null, null);
-      return;
-    }
-    result(null, res[0])
+    (err || res.length === 0) ? result(err, false) : result(null, res[0]);
   })
 };
 
