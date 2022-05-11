@@ -15,4 +15,12 @@ Save.create = (newSave, result) => {
   });
 };
 
+Save.getAllSaves = (result) => {
+  db.query("SELECT postId, userId FROM `saves`", (err, res) => {
+    if (err) { return result(err, null) };
+    if (res.length === 0) { return result(null, null) };
+    return result(null, res)
+  })
+};
+
 module.exports = Save;

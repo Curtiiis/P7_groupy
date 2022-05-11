@@ -12,6 +12,12 @@ Comment.create = (data, result) => {
   })
 };
 
+Comment.getAllComments = (result) => {
+  db.query("SELECT * FROM `comments_pseudo` ORDER BY createdAt DESC", (err, res) => {
+    (err) ? result(err, null) : result(null, res)
+  })
+};
+
 Comment.getByPostId = (data, result) => {
   db.query("SELECT * FROM `comments_pseudo` WHERE postId = ? ORDER BY createdAt DESC", data, (err, res) => {
     (err) ? result(err, null) : result(null, res)

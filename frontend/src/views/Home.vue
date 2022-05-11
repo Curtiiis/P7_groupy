@@ -41,6 +41,7 @@
                 @get-all-posts="getAllPosts"
                 @get-user-infos="getCurrentUser"
               />
+              <button @click="getFiveMore">Voir plus</button>
             </div>
           </transition>
 
@@ -122,6 +123,7 @@ export default {
       noPosts: false,
       noPostMsg: '',
       noContent: false,
+      numberPosts: 5,
     };
   },
   methods: {
@@ -206,12 +208,17 @@ export default {
         .catch((error) => console.log(error));
     },
 
+    getFiveMore() {
+      this.numberPosts += 5;
+      this.getAllPosts();
+    },
+
     getAllPosts() {
       this.$store.commit('resetModals');
       http
-        .get(`posts`, this.setAuthorization())
+        .get(`posts/${this.numberPosts}`, this.setAuthorization())
         .then((response) => {
-          // console.log('Posts', response.data);
+          console.log('Posts', response.data);
           if (response.data.length == 0) {
             this.noPosts = true;
             utils.commitPostData([]);
@@ -220,11 +227,8 @@ export default {
             utils.commitPostData(response.data);
           }
           utils.showLoader(false, 500);
-          utils.scrollToTop();
         })
-        .catch((error) => {
-          console.log(error);
-        });
+        .catch((error) => console.log(error));
       this.getCurrentUser();
     },
 
