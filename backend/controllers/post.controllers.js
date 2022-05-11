@@ -51,21 +51,22 @@ exports.getAllPosts = (req, res, next) => {
           if (err) throw err
           Comment.getAllComments((err, dataComments) => {
             if (err) throw err
-            for (let item of dataArray) {
-              item.notMyself = item.userId != userIdAuth
-              item.link = item.pseudo.toLowerCase().replace(" ", "-")
-              item.updated = Number(item.createdAt) !== Number(item.updatedAt)
-              item.likes = dataLikes.filter(x => x.postId == item.postId).map(y => y.userId).length
-              item.liked = dataLikes.filter(x => x.postId == item.postId).map(y => y.userId).includes(userIdAuth)
-              item.saves = dataSaves.filter(x => x.postId == item.postId).map(y => y.userId).length
-              item.saved = dataSaves.filter(x => x.postId == item.postId).map(y => y.userId).includes(userIdAuth)
-              item.follows = dataFollows.filter(x => x.followId == item.userId).map(y => y.userId)
-              item.followed = dataFollows.filter(x => x.followId == item.userId).map(y => y.userId).includes(userIdAuth)
-              let commentsArray = dataComments.filter(x => x.postId == item.postId)
-              item.comments = commentsArray
-              item.commentsCount = commentsArray.length
-              item.commentText = "";
 
+            for (let item of dataArray) {
+              item.notMyself = item.userId != userIdAuth;
+              item.link = item.pseudo.toLowerCase().replace(" ", "-");
+              item.updated = Number(item.createdAt) !== Number(item.updatedAt);
+              item.likes = dataLikes.filter(x => x.postId == item.postId).map(y => y.userId).length;
+              item.liked = dataLikes.filter(x => x.postId == item.postId).map(y => y.userId).includes(userIdAuth);
+              item.saves = dataSaves.filter(x => x.postId == item.postId).map(y => y.userId).length;
+              item.saved = dataSaves.filter(x => x.postId == item.postId).map(y => y.userId).includes(userIdAuth);
+              item.follows = dataFollows.filter(x => x.followId == item.userId).map(y => y.userId);
+              item.followed = dataFollows.filter(x => x.followId == item.userId).map(y => y.userId).includes(userIdAuth);
+
+              let commentsArray = dataComments.filter(x => x.postId == item.postId);
+              item.comments = commentsArray;
+              item.commentsCount = commentsArray.length;
+              item.commentText = "";
               for (let comment of commentsArray) {
                 comment.updating = false;
                 comment.updated = Number(comment.createdAt) !== Number(comment.updatedAt)
