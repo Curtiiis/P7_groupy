@@ -24,6 +24,12 @@ Comment.getByIdAndUserId = (data, result) => {
   })
 };
 
+Comment.modify = (data, result) => {
+  db.query("UPDATE `comments` SET text = ? WHERE `comments`.`id` = ?", data, (err, res) => {
+    (err) ? result(err, null) : result(null, res)
+  })
+};
+
 Comment.delete = (data, result) => {
   db.query("DELETE FROM `comments` WHERE `comments`.`id` = ?", data, (err, res) => {
     (err) ? result(err, null) : result(null, res)

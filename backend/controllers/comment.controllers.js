@@ -1,5 +1,4 @@
 require('dotenv').config();
-const db = require('../config/db');
 const Comment = require('../models/comment.models');
 
 // CRUD COMMENTS
@@ -26,23 +25,18 @@ exports.createComment = (req, res, next) => {
 };
 
 exports.modifyComment = (req, res, next) => {
-  db.query("SELECT userId FROM `comments` WHERE `comments`.`id` = ?", req.params.id, (err, data) => {
+  Comment.getByIdAndUserId([req.params.id, req.auth.userId], (err, data) => {
     if (err) {
       return res.status(400).json({ message: 'Bad request !' });
     }
-
-    if (req.auth.userId != data[0].userId && req.auth.isAdmin == 0) {
+    if (data == '' && req.auth.isAdmin == 0) {
       return res.status(401).json({ message: 'Unauthorized request !' })
     }
-
-    db.query(
-      "UPDATE `comments` SET text = ? WHERE `comments`.`id` = ?",
-      [req.body.text, req.params.id], (err, response) => {
-        if (err) {
-          return res.status(400).json({ message: 'Bad request !' });
-        }
-      })
-    res.status(200).json(req.body.text)
+    Comment.modify([req.body.text, req.params.id], (err, data) => {
+      (err)
+        ? res.status(400).json({ message: 'Bad request !' })
+        : res.status(200).json(req.body.text)
+    })
   })
 };
 
@@ -55,7 +49,7 @@ exports.deleteComment = (req, res, next) => {
       return res.status(401).json({ message: 'Unauthorized request !' })
     }
 
-    Comment.delete([req.params.id], (err, data) => {
+    Comment.delete([req.params.id], (err) => {
       (err)
         ? res.status(400).json({ message: 'Bad request !' })
         : res.status(200).json({ message: 'Comment deleted !' })
