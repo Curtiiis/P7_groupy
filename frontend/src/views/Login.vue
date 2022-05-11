@@ -1,8 +1,6 @@
 <template>
   <div class="super-container">
-    <div class="valid-box" v-show="displayValidBox">
-      <img src="../assets/checked.png" alt="checked logo" />
-    </div>
+    <ValidBox :validBox="showValidBox" />
     <div class="auth__container">
       <TitleLogo :authType="login" />
       <div class="errorLogin" v-show="showErrorLogin">
@@ -60,7 +58,6 @@
 <script>
 //IMPORTS
 import {mapState, mapGetters} from 'vuex';
-// import store from '../store/index';
 import TitleLogo from '../components/TitleLogo.vue';
 
 import _ from 'lodash';
@@ -80,7 +77,6 @@ export default {
     return {
       login: 'Connexion',
       displayContainer: true,
-      displayValidBox: false,
       showPassword: false,
       displayError: false,
       showErrorLogin: false,
@@ -131,7 +127,7 @@ export default {
           _inputName.parentElement.classList.remove('shake');
         }, 500);
       }
-    }, 700),
+    }, 1000),
 
     errorAnimation() {
       this.showErrorLogin = true;
@@ -158,10 +154,8 @@ export default {
           utils.commitToken(response.data.token);
           utils.commitUserId(response.data.userId);
 
-          this.displayValidBox = true;
-          setTimeout(() => {
-            this.$router.push('/');
-          }, 500);
+          utils.showValidBox(true);
+          utils.redirectDelay('/', 500);
         })
         .catch((error) => {
           if (error.response.status == 400) {
@@ -184,6 +178,7 @@ export default {
       userId: 'userId',
       showAccount: 'showAccount',
       showLoader: 'showLoader',
+      showValidBox: 'showValidBox',
       noPosts: 'noPosts',
       userDataX: 'userDataX',
     }),
@@ -195,6 +190,7 @@ export default {
       'linkGetter',
       'accountGetter',
       'loaderGetter',
+      'validBoxGetter',
       'noPostsGetter',
       'isAdminGetter',
       'userDataGetter',

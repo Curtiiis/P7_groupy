@@ -1,4 +1,5 @@
 import store from '../store/index'
+import router from '../router/index'
 
 export function scrollToTop() {
   window.scrollTo(0, 0);
@@ -198,4 +199,14 @@ export function commitImgPreview(value) {
   store.commit('changeState', {
     imgPreview: value,
   });
+}
+
+// Fonctions globales
+export function redirectDelay(value, delay) {
+  setTimeout(() => {
+    router.push(value);
+  }, delay);
+}
+export function redirect(value) {
+  router.push(value);
 }
