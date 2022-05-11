@@ -8,6 +8,29 @@ const Report = require('../models/report.models');
 const Follow = require('../models/follow.models');
 const Comment = require('../models/comment.models');
 
+function completeDataArray(userIdAuth, array1, array2, array3, array4, array5) {
+  for (let item of array1) {
+    item.notMyself = item.userId != userIdAuth;
+    item.link = item.pseudo.toLowerCase().replace(" ", "-");
+    item.updated = Number(item.createdAt) !== Number(item.updatedAt);
+    item.likes = array2.filter(x => x.postId == item.postId).map(y => y.userId).length;
+    item.liked = array2.filter(x => x.postId == item.postId).map(y => y.userId).includes(userIdAuth);
+    item.saves = array3.filter(x => x.postId == item.postId).map(y => y.userId).length;
+    item.saved = array3.filter(x => x.postId == item.postId).map(y => y.userId).includes(userIdAuth);
+    item.follows = array4.filter(x => x.followId == item.userId).map(y => y.userId);
+    item.followed = array4.filter(x => x.followId == item.userId).map(y => y.userId).includes(userIdAuth);
+
+    let commentsArray = array5.filter(x => x.postId == item.postId);
+    item.comments = commentsArray;
+    item.commentsCount = commentsArray.length;
+    item.commentText = "";
+    for (let comment of commentsArray) {
+      comment.updating = false;
+      comment.updated = Number(comment.createdAt) !== Number(comment.updatedAt)
+    }
+  }
+}
+
 // CRUD POSTS
 exports.createPost = (req, res, next) => {
   if (!req.file && req.body.title == '' && req.body.text == '') {
@@ -52,26 +75,8 @@ exports.getAllPosts = (req, res, next) => {
           Comment.getAllComments((err, dataComments) => {
             if (err) throw err
 
-            for (let item of dataArray) {
-              item.notMyself = item.userId != userIdAuth;
-              item.link = item.pseudo.toLowerCase().replace(" ", "-");
-              item.updated = Number(item.createdAt) !== Number(item.updatedAt);
-              item.likes = dataLikes.filter(x => x.postId == item.postId).map(y => y.userId).length;
-              item.liked = dataLikes.filter(x => x.postId == item.postId).map(y => y.userId).includes(userIdAuth);
-              item.saves = dataSaves.filter(x => x.postId == item.postId).map(y => y.userId).length;
-              item.saved = dataSaves.filter(x => x.postId == item.postId).map(y => y.userId).includes(userIdAuth);
-              item.follows = dataFollows.filter(x => x.followId == item.userId).map(y => y.userId);
-              item.followed = dataFollows.filter(x => x.followId == item.userId).map(y => y.userId).includes(userIdAuth);
-
-              let commentsArray = dataComments.filter(x => x.postId == item.postId);
-              item.comments = commentsArray;
-              item.commentsCount = commentsArray.length;
-              item.commentText = "";
-              for (let comment of commentsArray) {
-                comment.updating = false;
-                comment.updated = Number(comment.createdAt) !== Number(comment.updatedAt)
-              }
-            }
+            completeDataArray(
+              userIdAuth, dataArray, dataLikes, dataSaves, dataFollows, dataComments)
             res.status(200).json(dataArray)
           })
         })
