@@ -8,7 +8,7 @@ module.exports = (req, res, next) => {
 
     req.auth = {
       userId: decodedToken.id_user,
-      pseudo: decodedToken.pseudo,
+      // pseudo: decodedToken.pseudo,
       isActive: decodedToken.isActive,
       isAdmin: decodedToken.isAdmin
     };

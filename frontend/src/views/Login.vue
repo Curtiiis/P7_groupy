@@ -133,65 +133,45 @@ export default {
       }
     }, 700),
 
+    errorAnimation() {
+      this.showErrorLogin = true;
+      const errorLoginMsg = document.querySelector('.errorLogin p');
+      errorLoginMsg.classList.add('shake');
+
+      setTimeout(() => {
+        errorLoginMsg.classList.remove('shake');
+      }, 500);
+      return;
+    },
+
     submitLoginForm() {
-      if (!this.$v.$invalid) {
-        http
-          .post('auth/login', {
-            email: this.$v.user.email.$model,
-            password: this.$v.user.password.$model,
-          })
-          .then((response) => {
-            const res = response.data;
-            if (res.isActive == 1) {
-              localStorage.setItem('token', res.token);
-
-              let user = {
-                followers: res.followers,
-                isAdmin: res.isAdmin,
-                link: res.link,
-                picture: res.picture,
-                posts: res.posts,
-                pseudo: res.pseudo,
-                userEmail: res.userEmail,
-                userId: res.userId,
-              };
-              utils.commitToken(res.token);
-              utils.commitUserData(user);
-
-              utils.commitUserFollowers(res.followers);
-              utils.commitIsAdmin(res.isAdmin);
-              // utils.commitUserLink(res.link);
-              // utils.commitUserPicture(res.picture);
-              // utils.commitUserPosts(res.posts);
-              // utils.commitUserPseudo(res.pseudo);
-              // utils.commitUserEmail(res.userEmail);
-              utils.commitUserId(res.userId);
-
-              // this.displayValidBox = true;
-              // setTimeout(() => {
-              //   this.$router.push('/');
-              // }, 500);
-            }
-            if (response.data.isActive == 0) {
-              this.showErrorLogin = true;
-              const errorLoginMsg = document.querySelector('.errorLogin p');
-              errorLoginMsg.classList.add('shake');
-
-              setTimeout(() => {
-                errorLoginMsg.classList.remove('shake');
-              }, 500);
-              return;
-            }
-          })
-          .catch((error) => {
-            if (error.response != undefined && error.response.status === 401) {
-              this.errorMessage = error.response.data.message;
-            }
-            // console.log(error.response);
-          });
-      } else {
+      if (this.$v.$invalid) {
         return;
       }
+      http
+        .post('auth/login', {
+          email: this.$v.user.email.$model,
+          password: this.$v.user.password.$model,
+        })
+        .then((response) => {
+          localStorage.setItem('token', response.data.token);
+          utils.commitToken(response.data.token);
+          utils.commitUserId(response.data.userId);
+
+          this.displayValidBox = true;
+          setTimeout(() => {
+            this.$router.push('/');
+          }, 500);
+        })
+        .catch((error) => {
+          if (error.response.status == 400) {
+            this.errorMessage = 'Pseudo/email invalide';
+          }
+          if (error.response.status === 401) {
+            return this.errorAnimation();
+          }
+          console.log(error);
+        });
     },
   },
   computed: {

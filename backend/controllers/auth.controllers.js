@@ -30,44 +30,29 @@ exports.signup = (req, res, next) => {
 
 exports.login = (req, res, next) => {
   User.getUserByEmail(req.body.email, (err, userFound) => {
+    if (userFound == 0) {
+      return res.status(401).json({ message: "Disabled account" })
+    }
     const passwordEncoded = userFound === null ? '' : userFound.password
     bcrypt.compare(req.body.password, passwordEncoded)
       .then(valid => {
-        if (!valid) {
-          return res.status(401).json({ message: "Email ou mot de passe invalide " })
-        }
         if (err) throw err;
-
-        db.query("SELECT userId, followId FROM `follows`",
-          (err, dataFollows) => {
-            if (err) throw err
-            userFound.follows = dataFollows[0]
-            db.query("SELECT COUNT(userId) AS posts FROM `posts` WHERE userId = ?", [userFound.id], (err, data) => {
-              if (err) throw err
-              userFound.posts = data[0].posts
-              res.status(200).json({
-                followers: userFound.follows,
-                isActive: userFound.isActive,
-                isAdmin: userFound.isAdmin,
-                link: userFound.pseudo.toLowerCase().replace(" ", "-"),
-                picture: userFound.picture,
-                posts: userFound.posts,
-                pseudo: userFound.pseudo,
-                userEmail: userFound.email,
-                userId: userFound.id,
-                token: jwt.sign(
-                  {
-                    id_user: userFound.id,
-                    pseudo: userFound.pseudo,
-                    isActive: userFound.isActive,
-                    isAdmin: userFound.isAdmin
-                  },
-                  `${process.env.TOKEN_KEY}`,
-                  { expiresIn: '24h' }
-                )
-              })
-            })
-          })
+        if (!valid) {
+          return res.status(400).json({ message: "Unavailable pseudo or email" })
+        }
+        res.status(200).json({
+          isActive: userFound.isActive,
+          isAdmin: userFound.isAdmin,
+          userId: userFound.userId,
+          token: jwt.sign({
+            id_user: userFound.userId,
+            isActive: userFound.isActive,
+            isAdmin: userFound.isAdmin
+          },
+            `${process.env.TOKEN_KEY}`,
+            { expiresIn: '24h' }
+          )
+        })
       })
       .catch(error => {
         console.log('Error 500', error)
