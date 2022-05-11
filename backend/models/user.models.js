@@ -12,7 +12,7 @@ User.create = (data, result) => {
   })
 };
 
-User.isUniqueUser = (data, result) => {
+User.isUnique = (data, result) => {
   db.query(
     "SELECT SUM (CASE WHEN pseudo = ? THEN 1 ELSE 0 END) AS samePseudo, SUM (CASE WHEN email = ? THEN 1 ELSE 0 END) AS sameEmail FROM users", data, (err, res) => {
       (err || res[0].samePseudo !== 0 || res[0].sameEmail !== 0) ? result(err, false) : result(null, true)

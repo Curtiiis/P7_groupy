@@ -5,7 +5,7 @@ const db = require('../config/db');
 const bcrypt = require('bcrypt');
 
 exports.signup = (req, res, next) => {
-  User.isUniqueUser(
+  User.isUnique(
     [req.body.pseudo, req.body.email],
     (err, response) => {
       if (err) throw err
