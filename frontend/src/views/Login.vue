@@ -167,10 +167,10 @@ export default {
               // utils.commitUserEmail(res.userEmail);
               utils.commitUserId(res.userId);
 
-              this.displayValidBox = true;
-              setTimeout(() => {
-                this.$router.push('/');
-              }, 500);
+              // this.displayValidBox = true;
+              // setTimeout(() => {
+              //   this.$router.push('/');
+              // }, 500);
             }
             if (response.data.isActive == 0) {
               this.showErrorLogin = true;

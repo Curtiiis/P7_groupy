@@ -1,22 +1,25 @@
 const db = require('../config/db');
 
 const User = function (user) {
-  this.pseudo = user.pseudo;
-  this.email = user.email;
-  this.password = user.password;
-};
+  this.email = user.email,
+    this.pseudo = user.pseudo,
+    this.password = user.password,
+    this.isAdmin = false,
+    this.isActive = true
+}
 
-User.create = (data, result) => {
-  db.query("INSERT INTO `users` SET ?", data, (err, res) => {
-    (err) ? result(err, null) : result(null, data)
-  })
-};
-
-User.isUniqueUser = (data, result) => {
-  db.query(
-    "SELECT SUM (CASE WHEN pseudo = ? THEN 1 ELSE 0 END) AS samePseudo, SUM (CASE WHEN email = ? THEN 1 ELSE 0 END) AS sameEmail FROM users", data, (err, res) => {
-      (err || res[0].samePseudo !== 0 || res[0].sameEmail !== 0) ? result(err, false) : result(null, true)
-    })
+User.create = (newUser, result) => {
+  db.query("INSERT INTO users SET ?", newUser, (err, res) => {
+    if (err) {
+      result(err, null);
+      return;
+    }
+    if (res.length === 0) {
+      result(null, null);
+      return;
+    }
+    result(null, { newUser })
+  });
 };
 
 User.getUserByEmail = (email, result) => {

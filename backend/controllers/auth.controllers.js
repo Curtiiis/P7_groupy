@@ -5,15 +5,12 @@ const db = require('../config/db');
 const bcrypt = require('bcrypt');
 
 exports.signup = (req, res, next) => {
-  db.query("SELECT pseudo,email FROM `users`",
-    (err, dataDb) => {
+  User.isUniqueUser(
+    [req.body.pseudo, req.body.email],
+    (err, response) => {
       if (err) throw err
-      const dbPseudos = dataDb.map(x => x.pseudo.toLowerCase().trim());
-      const bodyPseudo = (req.body.pseudo.toLowerCase().trim());
-      const dbEmails = dataDb.map(x => x.email.toLowerCase().trim());
-      const bodyEmail = (req.body.email.toLowerCase().trim());
-      if (dbPseudos.includes(bodyPseudo) || dbEmails.includes(bodyEmail)) {
-        return res.status(401).json({ message: "Unavailable pseudo or email" });
+      if (response == false) {
+        return res.status(401).json({ message: "Non unique pseudo or email" });
       }
       bcrypt.hash(req.body.password, 5)
         .then(hash => {
@@ -24,7 +21,7 @@ exports.signup = (req, res, next) => {
           });
           User.create(user, (err) => {
             if (err) throw err
-            res.status(201).json({ message: 'Account created with success' });
+            res.status(201).json({ message: 'Created with success' });
           })
         })
         .catch(error => res.status(500).json(error))

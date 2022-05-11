@@ -221,11 +221,12 @@ export default {
             email: this.$v.user.email.$model,
             password: this.$v.user.password1.$model,
           })
-          .then(() => {
-            this.displayValidBox = true;
-            setTimeout(() => {
-              this.$router.push('/login');
-            }, 1000);
+          .then((res) => {
+            console.log(res.data);
+            // this.displayValidBox = true;
+            // setTimeout(() => {
+            //   this.$router.push('/login');
+            // }, 1000);
           })
           .catch((error) => {
             if (error.response != null && error.response.status === 401) {
