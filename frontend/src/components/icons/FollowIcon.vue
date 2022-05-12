@@ -44,7 +44,6 @@ button.follow-btn {
   transition: all 0.5s ease-out;
 
   &.green {
-    // background-color: #3fd9ae;
     background-color: #1dc874;
   }
 

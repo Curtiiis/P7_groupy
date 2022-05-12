@@ -147,7 +147,6 @@ export default {
           )
           .then((res) => {
             res;
-            // console.log(res);
             setTimeout(() => {
               store.commit('changeState', {
                 showSaveBox: false,
@@ -216,7 +215,6 @@ export default {
   height: 90%;
   #form {
     width: 90%;
-    /* max-width: 300px; */
     margin: 0 auto;
     height: 70%;
     display: flex;

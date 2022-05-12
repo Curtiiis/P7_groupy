@@ -355,7 +355,6 @@ input.white-border {
   justify-content: space-between;
   #form {
     width: 90%;
-    /* max-width: 300px; */
     margin: 0 auto;
     height: 70%;
     display: flex;
@@ -365,8 +364,6 @@ input.white-border {
 }
 .main-settings {
   padding: 20px 0;
-  //   display: flex;
-  //   justify-content: space-between;
   width: 100%;
   max-width: 500px;
   height: calc(100vh - 51px);
@@ -375,13 +372,9 @@ input.white-border {
   & > div,
   &-aside ul li {
     border: 1px solid #ddd;
-    // border-radius: 10px;
     background-color: #fff;
     padding: 10px;
     list-style-type: none;
-    // margin: 0;
-    // margin: 0 auto 10px;
-    // margin-bottom: 10px;
   }
 
   &-aside {
@@ -423,17 +416,8 @@ input.white-border {
   &-content {
     margin-top: 20px;
     height: 80%;
-    // max-height: 75%;
-    // overflow-y: scroll;
     overflow: hidden;
     padding: 20px !important;
-    // &::-webkit-scrollbar {
-    //   width: 5px;
-    // }
-    // &::-webkit-scrollbar-thumb {
-    //   border-radius: 10px;
-    //   background-color: #fd7d63;
-    // }
     & > div.active {
       display: block;
     }
@@ -445,13 +429,10 @@ input.white-border {
       & label {
         display: inline-block;
         width: 20%;
-        // margin-bottom: 10px;
-        // text-align: right;
       }
       & > div {
         display: flex;
         justify-content: end;
-        // width: 80%;
       }
       & > div.form-text {
         display: flex;
@@ -488,7 +469,6 @@ input.white-border {
       position: relative;
       border: 1px dashed;
       padding: 5px;
-      //   margin: 0 auto 20px;
       border-radius: 50%;
       cursor: pointer;
     }
@@ -506,21 +486,6 @@ input.white-border {
   align-items: center;
   justify-content: center;
 }
-
-//   display: flex;
-//   flex-direction: column;
-//   justify-content: flex-start;
-//   height: 100%;
-//   & form:last-child {
-//     height: 100%;
-//     display: flex;
-//     align-items: end;
-//     justify-content: center;
-
-//     & label {
-//       display: inline;
-//     }
-//   }
 
 #save-form-btn {
   padding: 7px 0;
@@ -545,7 +510,6 @@ input.white-border {
     border-bottom: none;
   }
   overflow-y: scroll;
-  //   height: 100%;
   height: calc(100% - 40px);
   &::-webkit-scrollbar {
     width: 0px;
@@ -593,12 +557,9 @@ input.white-border {
   width: 100%;
   display: flex;
   align-items: center;
-  //   justify-content: space-between;
-  //   flex-direction: column;
   flex-wrap: wrap;
   height: calc(100% - 40px);
   overflow-y: scroll;
-  //   overflow-y: scroll;
   &::-webkit-scrollbar {
     width: 0px;
   }

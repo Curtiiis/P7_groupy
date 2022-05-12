@@ -5,11 +5,7 @@
         <p class="aside-left__pseudo-v" id="pseudo-user">
           <span>{{ user.pseudo }}</span>
         </p>
-        <a
-          :href="user.link"
-          class="profile-picture"
-          @click.prevent="$emit('get-user-profile', user)"
-        >
+        <a :href="user.link" class="profile-picture" @click.prevent="$emit('get-user-profile', user)">
           <img :src="user.picture" alt="Photo de profil" />
         </a>
       </div>
@@ -44,7 +40,6 @@ export default {
   display: none;
   position: sticky;
   top: 70px;
-  // height: calc(100vh - 50px - 40px);
   height: fit-content;
   width: 23%;
   min-width: 130px;
@@ -55,7 +50,6 @@ export default {
   overflow: hidden;
 
   &__content {
-    // background-color: #fcc;
     position: sticky;
     top: 0;
     width: 100%;
@@ -66,11 +60,9 @@ export default {
     justify-content: center;
     align-items: end;
     height: 200px;
-    // border-radius: 20px 20px 0 0;
     background-color: #fd7d63;
   }
   &__bottom {
-    // height: calc(100% - 200px);
     padding: 30px 5px 0;
     & > div {
       margin: 35px 0;
@@ -108,8 +100,6 @@ export default {
     bottom: calc(-100px / 2);
     width: 100px;
     height: 100px;
-    // left: 50%;
-    // transform: translateX(-50%);
     & img {
       height: 100%;
       width: 100%;

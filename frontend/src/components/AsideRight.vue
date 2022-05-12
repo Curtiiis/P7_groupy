@@ -67,14 +67,9 @@ export default {
     &::-webkit-scrollbar {
       width: 0px;
       &-track {
-        // background: linear-gradient(transparent, #fdd0d0, transparent);
         background: transparent;
         border-radius: 10px;
       }
-      // &-thumb {
-      //   background: linear-gradient(transparent, #fdd0d0, transparent);
-      //   border-radius: 10px;
-      // }
     }
     & .card {
       margin: 10px;

@@ -201,7 +201,6 @@ export default {
 <style scoped lang="scss">
 .fade-enter,
 .fade-leave-to {
-  //   filter: brightness(0);
   transform: translateX(-20px);
 }
 
@@ -255,9 +254,6 @@ export default {
         padding-right: 20px;
       }
     }
-    // &__post-container {
-    //   padding: 15px;
-    // }
     & form > div > div {
       margin: 10px 0;
     }
@@ -329,18 +325,11 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    // background-color: hsl(218, 33%, 75%);
     color: #344767;
-    // width: fit-content;
     width: 100%;
     min-width: 90%;
     max-height: 240px;
     margin: 0 auto 10px;
-
-    // &.no-border {
-    //   border: none;
-    //   background: none;
-    // }
 
     & label {
       width: 100%;
@@ -354,7 +343,6 @@ export default {
         height: 100%;
         margin: 0 auto;
         & img {
-          // display: none;
           width: 100%;
           height: 100%;
           max-height: 240px;
@@ -427,7 +415,6 @@ export default {
       padding: 0 5px 5px 5px;
       &::-webkit-scrollbar {
         width: 5px;
-        // background-color: #faa;
       }
       &::-webkit-scrollbar-thumb {
         border-radius: 10px;

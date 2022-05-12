@@ -277,7 +277,6 @@ button.orange {
   }
 
   &__infos {
-    // background-color: #ffc;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -304,9 +303,6 @@ button.orange {
           border-radius: 50%;
         }
       }
-      //   &:hover ~ .middle a {
-      //     text-decoration: underline;
-      //   }
     }
     & .middle {
       text-align: left;
@@ -330,7 +326,6 @@ button.orange {
       }
     }
     & .right {
-      //   background-color: #e0b964;
       width: 50px;
       height: 100%;
     }
@@ -338,7 +333,6 @@ button.orange {
   &__content {
     text-align: left;
     margin-bottom: 0 !important;
-    // background-color: #ffc;
 
     & > div {
       margin: 5px 0;
@@ -347,13 +341,10 @@ button.orange {
   &__image {
     display: flex;
     justify-content: center;
-    // background-color: #cff;
     width: 100%;
 
     & img {
       box-shadow: 0 0 5px #0003;
-      //   width: 100%;
-      //   height: 100%;
       max-height: 450px;
       object-fit: contain;
       width: fit-content;
@@ -419,24 +410,6 @@ button.orange {
       }
     }
 
-    // #update-comment-form {
-    //   margin-top: 0;
-    //   height: fit-content;
-    //   & input {
-    //     border: none;
-    //     background-color: #344767;
-    //     color: #fff;
-    //     border-radius: 5px;
-    //     padding: 3px 5px;
-    //     width: 100%;
-    //     height: fit-content;
-    //   }
-    //   & button {
-    //     border: none;
-    //     background: none;
-    //   }
-    // }
-
     &-infos {
       display: flex;
       & p {
@@ -459,7 +432,6 @@ button.orange {
     & form {
       display: flex;
       align-items: center;
-      // margin-top: 10px;
     }
     & .text-comment-input,
     & #update-comment-text {
@@ -517,7 +489,6 @@ button.orange {
 }
 .fade-enter,
 .fade-leave-to {
-  //   filter: brightness(0);
   transform: translateX(-20px);
 }
 </style>

@@ -271,7 +271,6 @@ $height-navbar: 50px;
 
   & .search-container {
     position: relative;
-    // width: 100%;
   }
   & form {
     display: flex;
@@ -288,7 +287,6 @@ $height-navbar: 50px;
   }
 
   & input {
-    // max-width: 300px;
     width: 80%;
     height: 30px;
     padding-left: 10px;
@@ -301,7 +299,6 @@ $height-navbar: 50px;
   }
 
   &__search__modale {
-    // display: none;
     top: 40px;
     left: 0;
     width: 100%;
@@ -309,9 +306,6 @@ $height-navbar: 50px;
     position: absolute;
     border-radius: 0 0 10px 10px;
     border: 1px solid #ddd;
-    // &.border {
-    //   border: 1px solid #ddd;
-    // }
 
     & div.no-result {
       padding: 10px;
@@ -321,8 +315,6 @@ $height-navbar: 50px;
       font-weight: 600;
       border: 2px solid #ddd;
       border-top: 1px solid #ddd;
-      //   background-color: #fd7d63;
-      //   color: #fff;
     }
   }
 
@@ -430,7 +422,6 @@ $height-navbar: 50px;
   & .result {
     display: flex;
     align-items: center;
-    // margin-bottom: 10px;
     padding: 5px;
     img {
       width: 40px;

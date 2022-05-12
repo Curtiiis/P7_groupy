@@ -1,8 +1,5 @@
 <template>
   <div class="valid-box">
-    <!-- <div class="loader-text">
-      <p>Chargement des posts</p>
-    </div> -->
     <div class="loader loader--style6" title="5">
       <svg
         version="1.1"
@@ -18,58 +15,16 @@
         xml:space="preserve"
       >
         <rect x="0" y="13" width="4" height="15" fill="#fd7d63">
-          <animate
-            attributeName="height"
-            attributeType="XML"
-            values="5;21;5"
-            begin="0s"
-            dur="0.6s"
-            repeatCount="indefinite"
-          />
-          <animate
-            attributeName="y"
-            attributeType="XML"
-            values="13; 5; 13"
-            begin="0s"
-            dur="0.6s"
-            repeatCount="indefinite"
-          />
+          <animate attributeName="height" attributeType="XML" values="5;21;5" begin="0s" dur="0.6s" repeatCount="indefinite" />
+          <animate attributeName="y" attributeType="XML" values="13; 5; 13" begin="0s" dur="0.6s" repeatCount="indefinite" />
         </rect>
         <rect x="10" y="13" width="4" height="15" fill="#fd7d63">
-          <animate
-            attributeName="height"
-            attributeType="XML"
-            values="5;21;5"
-            begin="0.15s"
-            dur="0.6s"
-            repeatCount="indefinite"
-          />
-          <animate
-            attributeName="y"
-            attributeType="XML"
-            values="13; 5; 13"
-            begin="0.15s"
-            dur="0.6s"
-            repeatCount="indefinite"
-          />
+          <animate attributeName="height" attributeType="XML" values="5;21;5" begin="0.15s" dur="0.6s" repeatCount="indefinite" />
+          <animate attributeName="y" attributeType="XML" values="13; 5; 13" begin="0.15s" dur="0.6s" repeatCount="indefinite" />
         </rect>
         <rect x="20" y="13" width="4" height="15" fill="#fd7d63">
-          <animate
-            attributeName="height"
-            attributeType="XML"
-            values="5;21;5"
-            begin="0.3s"
-            dur="0.6s"
-            repeatCount="indefinite"
-          />
-          <animate
-            attributeName="y"
-            attributeType="XML"
-            values="13; 5; 13"
-            begin="0.3s"
-            dur="0.6s"
-            repeatCount="indefinite"
-          />
+          <animate attributeName="height" attributeType="XML" values="5;21;5" begin="0.3s" dur="0.6s" repeatCount="indefinite" />
+          <animate attributeName="y" attributeType="XML" values="13; 5; 13" begin="0.3s" dur="0.6s" repeatCount="indefinite" />
         </rect>
       </svg>
     </div>
@@ -78,8 +33,8 @@
 
 <script>
 export default {
-  name: "ValidBox",
-  props: ["validBox"],
+  name: 'ValidBox',
+  props: ['validBox'],
   data() {
     return {
       showValidBox: false,
