@@ -193,13 +193,11 @@ exports.getStatistics = (req, res, next) => {
 
 // CRUD SAVES
 exports.getSaves = (req, res, next) => {
-  db.query(
-    "SELECT postId,userId,pseudo,title,media FROM `posts_saves` WHERE userId = ? ORDER BY createdAt DESC",
-    req.auth.userId,
-    (err, data) => {
-      if (err) throw err
-      res.json(data)
-    })
+  Save.getFromUser([req.auth.userId], (err, data) => {
+    (err)
+      ? res.status(400).json({ message: 'Bad request !' })
+      : res.status(200).json(data)
+  })
 }
 
 exports.savePost = (req, res, next) => {

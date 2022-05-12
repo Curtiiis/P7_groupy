@@ -29,4 +29,10 @@ Save.getOneByPostId = (data, result) => {
   });
 };
 
+Save.getFromUser = (data, result) => {
+  db.query("SELECT * FROM `posts_saves` WHERE userId = ? ORDER BY createdAt DESC", data, (err, res) => {
+    (err) ? result(err, null) : result(null, res)
+  });
+};
+
 module.exports = Save;
