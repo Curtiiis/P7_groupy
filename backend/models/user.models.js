@@ -37,7 +37,7 @@ User.getUserByEmail = (email, result) => {
 };
 
 User.getUserById = (userId, result) => {
-  db.query("SELECT id, picture, pseudo FROM users WHERE id = ?", userId, (err, res) => {
+  db.query("SELECT id picture,pseudo,isAdmin FROM users WHERE id = ?", userId, (err, res) => {
     (err || res.length === 0) ? result(err, false) : result(null, res[0]);
   })
 };
@@ -68,6 +68,18 @@ User.getUsersStats = (data, result) => {
 
 User.getSuggestions = (data, result) => {
   db.query("SELECT DISTINCT userId,picture,pseudo FROM `users_follows` WHERE userId <> ? AND isActive = 1 ORDER BY RAND() LIMIT 5", data, (err, res) => {
+    (err) ? result(err, null) : result(null, res)
+  })
+};
+
+User.changeForUserStatus = (data, result) => {
+  db.query("UPDATE users SET isAdmin = 0 WHERE id = ?", data, (err, res) => {
+    (err) ? result(err, null) : result(null, res)
+  })
+};
+
+User.changeForAdminStatus = (data, result) => {
+  db.query("UPDATE users SET isAdmin = 1 WHERE id = ?", data, (err, res) => {
     (err) ? result(err, null) : result(null, res)
   })
 };
