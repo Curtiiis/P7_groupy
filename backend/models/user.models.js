@@ -66,5 +66,11 @@ User.getUsersStats = (data, result) => {
   })
 };
 
+User.getSuggestions = (data, result) => {
+  db.query("SELECT DISTINCT userId,picture,pseudo FROM `users_follows` WHERE userId <> ? AND isActive = 1 ORDER BY RAND() LIMIT 5", data, (err, res) => {
+    (err) ? result(err, null) : result(null, res)
+  })
+};
+
 module.exports = User;
 

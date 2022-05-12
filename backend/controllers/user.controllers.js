@@ -139,28 +139,22 @@ exports.getSuggestions = (req, res, next) => {
   if (req.params.id != req.auth.userId && req.auth.isAdmin == 0) {
     return res.status(403).json({ message: 'Unauthorized request !' });
   }
-  db.query(
-    "SELECT DISTINCT userId,picture,pseudo FROM `users_follows` WHERE userId <> ? AND isActive = 1 ORDER BY RAND() LIMIT 5",
-    [req.auth.userId],
-    (err, data) => {
-      let dataUsers = data;
-      if (err) {
-        return res.status(400).json({ err, message: 'Bad request !' });
+  User.getSuggestions([req.auth.userId], (err, dataUsers) => {
+    if (err) {
+      return res.status(400).json({ err, message: 'Bad request !' });
+    }
+    Follow.getAllFollows((err, dataFollows) => {
+      if (err) throw err
+      for (let item of dataUsers) {
+        let followsArray = dataFollows
+          .filter(x => x.followId == item.userId)
+          .map(y => y.userId)
+        item.followed = followsArray.includes(Number(req.auth.userId))
+        item.link = item.pseudo.toLowerCase().replace(" ", "-")
       }
-
-      db.query("SELECT userId, followId FROM `follows`",
-        (err, dataFollows) => {
-          if (err) throw err
-          for (let item of dataUsers) {
-            let followsArray = dataFollows
-              .filter(x => x.followId == item.userId)
-              .map(y => y.userId)
-            item.followed = followsArray.includes(Number(req.auth.userId))
-            item.link = item.pseudo.toLowerCase().replace(" ", "-")
-          }
-          res.status(200).json(dataUsers)
-        })
+      res.status(200).json(dataUsers)
     })
+  })
 }
 
 // POST
