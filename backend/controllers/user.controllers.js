@@ -3,9 +3,13 @@ const db = require('../config/db');
 const bcrypt = require('bcrypt');
 const fs = require('fs');
 const User = require('../models/user.models');
+const Post = require('../models/post.models');
 const Follow = require('../models/follow.models');
 const Picture = require('../models/picture.models');
 const Password = require('../models/password.models');
+const Like = require('../models/like.models');
+const Save = require('../models/save.models');
+const Comment = require('../models/comment.models');
 
 // GET
 exports.getAllUsers = (req, res, next) => {
@@ -24,46 +28,43 @@ exports.getAllUsers = (req, res, next) => {
 exports.getOneUser = (req, res) => {
   const userIdAuth = req.auth.userId;
   const values = [req.params.id]
-  db.query("SELECT * FROM `posts_users` WHERE userId = ?", values, (err, data) => {
-    let dataArray = data;
+  Post.getOneByUserId(values, (err, dataArray) => {
     if (err) throw err
     if (dataArray == '') {
-      db.query("SELECT pseudo FROM `users` WHERE id = ?", values, (err, data) => {
+      User.getUserById(values, (err, dataArray) => {
         if (err) throw err
-        dataArray = data[0]
-        res.status(202).json(dataArray)
+        return res.status(202).json(dataArray)
       })
     } else {
-      db.query("SELECT userId FROM `users_likes` WHERE postOwner = ?", values, (err, dataLikes) => {
+      Like.getFromUser(values, (err, dataLikes) => {
         if (err) throw err
-        db.query("SELECT userId FROM `users_saves` WHERE postOwner = ?", values, (err, dataSaves) => {
+        Save.getFromUser(values, (err, dataSaves) => {
           if (err) throw err
-          db.query("SELECT userId FROM `follows` WHERE followId = ?", values, (err, dataFollows) => {
+          Follow.getFollowsFromUser(values, (err, dataFollows) => {
             if (err) throw err
-            db.query("SELECT postId, pseudo, createdAt, text FROM `comments_pseudo` ORDER BY createdAt DESC",
-              (err, dataComments) => {
-                if (err) throw err
-                for (let item of dataArray) {
-                  item.likes = dataLikes.map(y => y.userId).length
-                  item.liked = dataLikes.map(y => y.userId).includes(userIdAuth)
-                  item.saves = dataSaves.map(y => y.userId).length
-                  item.saved = dataSaves.map(y => y.userId).includes(userIdAuth)
-                  item.follows = dataFollows.map(y => y.userId).length
-                  item.followed = dataFollows.map(y => y.userId).includes(userIdAuth)
-                  item.link = item.pseudo.toLowerCase().replace(" ", "-")
-                  item.notMyself = item.userId != userIdAuth
-                  let commentsArray = dataComments.filter(x => x.postId == item.postId)
-                  item.comments = commentsArray
-                  item.commentsCount = commentsArray.length
-                  item.commentText = "";
+            Comment.getAllComments((err, dataComments) => {
+              if (err) throw err
+              for (let item of dataArray) {
+                item.likes = dataLikes.map(y => y.userId).length
+                item.liked = dataLikes.map(y => y.userId).includes(userIdAuth)
+                item.saves = dataSaves.map(y => y.userId).length
+                item.saved = dataSaves.map(y => y.userId).includes(userIdAuth)
+                item.follows = dataFollows.map(y => y.userId).length
+                item.followed = dataFollows.map(y => y.userId).includes(userIdAuth)
+                item.link = item.pseudo.toLowerCase().replace(" ", "-")
+                item.notMyself = item.userId != userIdAuth
+                let commentsArray = dataComments.filter(x => x.postId == item.postId)
+                item.comments = commentsArray
+                item.commentsCount = commentsArray.length
+                item.commentText = "";
 
-                  for (let comment of commentsArray) {
-                    comment.updating = false;
-                    comment.updated = Number(comment.createdAt) !== Number(comment.updatedAt)
-                  }
+                for (let comment of commentsArray) {
+                  comment.updating = false;
+                  comment.updated = Number(comment.createdAt) !== Number(comment.updatedAt)
                 }
-                res.json(dataArray)
-              })
+              }
+              res.json(dataArray)
+            })
           })
         })
       })

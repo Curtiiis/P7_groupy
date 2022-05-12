@@ -25,6 +25,12 @@ Save.getOneByPostId = (data, result) => {
   });
 };
 
+Save.getFromUser = (data, result) => {
+  db.query("SELECT userId FROM `users_saves` WHERE postOwner = ?", data, (err, res) => {
+    (err) ? result(err, null) : result(null, res)
+  });
+};
+
 Save.getByPostIdAndUserId = (data, result) => {
   db.query("SELECT userId FROM `saves` WHERE postId = ? AND userId = ?", data, (err, res) => {
     (err) ? result(err, null) : result(null, res)

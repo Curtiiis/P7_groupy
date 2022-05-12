@@ -17,6 +17,12 @@ Like.getAllLikes = (result) => {
   })
 };
 
+Like.getFromUser = (data, result) => {
+  db.query("SELECT userId FROM `users_likes` WHERE postOwner = ?", data, (err, res) => {
+    (err) ? result(err, null) : result(null, res)
+  });
+};
+
 Like.getOneByPostId = (data, result) => {
   db.query("SELECT userId FROM `likes` WHERE postId = ?", data, (err, res) => {
     (err) ? result(err, null) : result(null, res)

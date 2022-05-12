@@ -25,6 +25,12 @@ Post.getOneByPostId = (data, result) => {
   });
 };
 
+Post.getOneByUserId = (data, result) => {
+  db.query("SELECT * FROM `posts_users` WHERE userId = ?", data, (err, res) => {
+    (err) ? result(err, null) : result(null, res)
+  });
+};
+
 Post.getByIdAndUserId = (data, result) => {
   db.query("SELECT * FROM `posts` WHERE `posts`.`id` = ? AND `posts`.`userId` = ?", data, (err, res) => {
     (err) ? result(err, null) : result(null, res)

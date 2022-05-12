@@ -41,7 +41,6 @@
               >
                 <img :src="user.picture" />
                 <div class="result-pseudo">{{ user.pseudo }}</div>
-                <!-- </a> -->
               </a>
             </div>
           </div>
@@ -436,6 +435,7 @@ $height-navbar: 50px;
     img {
       width: 40px;
       height: 40px;
+      object-fit: cover;
       border-radius: 50%;
       margin-right: 10px;
     }
