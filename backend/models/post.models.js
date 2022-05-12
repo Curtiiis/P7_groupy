@@ -14,7 +14,7 @@ Post.create = (data, result) => {
 };
 
 Post.getLastByFive = (data, result) => {
-  db.query("SELECT * FROM `posts_users` ORDER BY createdAt DESC LIMIT ?", data, (err, res) => {
+  db.query("SELECT * FROM `posts_users` WHERE isActive = 1 ORDER BY createdAt DESC LIMIT ?", data, (err, res) => {
     (err) ? result(err, null) : result(null, res)
   });
 };

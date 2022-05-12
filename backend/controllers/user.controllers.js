@@ -2,6 +2,7 @@ require('dotenv').config();
 const db = require('../config/db');
 const bcrypt = require('bcrypt');
 const fs = require('fs');
+const User = require('../models/user.models');
 const Follow = require('../models/follow.models');
 const Picture = require('../models/picture.models');
 const Password = require('../models/password.models');
@@ -11,15 +12,13 @@ exports.getAllUsers = (req, res, next) => {
   if (req.auth.isAdmin != 1) {
     return res.status(403).json({ message: 'Unauthorized request !' });
   }
-  db.query(
-    "SELECT id AS userId,pseudo,picture,isAdmin,isActive FROM `users` WHERE isActive = 1", (err, data) => {
-      let dataArray = data;
-      if (err) throw err
-      for (let item of dataArray) {
-        item.link = item.pseudo.toLowerCase().replace(" ", "-")
-      }
-      res.status(200).json(dataArray)
-    })
+  User.getAllActives((err, dataArray) => {
+    if (err) throw err
+    for (let item of dataArray) {
+      item.link = item.pseudo.toLowerCase().replace(" ", "-")
+    }
+    res.status(200).json(dataArray)
+  })
 };
 
 exports.getOneUser = (req, res) => {
@@ -160,7 +159,7 @@ exports.getSuggestions = (req, res, next) => {
     return res.status(403).json({ message: 'Unauthorized request !' });
   }
   db.query(
-    "SELECT DISTINCT userId,picture,pseudo FROM `users_follows` WHERE userId <> ? ORDER BY RAND() LIMIT 5",
+    "SELECT DISTINCT userId,picture,pseudo FROM `users_follows` WHERE userId <> ? AND isActive = 1 ORDER BY RAND() LIMIT 5",
     [req.auth.userId],
     (err, data) => {
       let dataUsers = data;

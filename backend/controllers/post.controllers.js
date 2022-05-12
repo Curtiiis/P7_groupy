@@ -1,5 +1,4 @@
 require('dotenv').config();
-const db = require('../config/db');
 const fs = require('fs');
 const Post = require('../models/post.models');
 const User = require('../models/user.models');

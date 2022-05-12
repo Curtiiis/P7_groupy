@@ -21,6 +21,12 @@ User.isUnique = (data, result) => {
     })
 };
 
+User.getAllActives = (result) => {
+  db.query("SELECT id AS userId,pseudo,picture,isAdmin,isActive FROM `users` WHERE isActive = 1", (err, res) => {
+    (err) ? result(err, null) : result(null, res)
+  })
+};
+
 User.getUserByEmail = (email, result) => {
   db.query("SELECT id AS userId,password,email,isAdmin,isActive FROM `users` WHERE email = ?", email, (err, res) => {
     if (err) { return result(err, null) };
