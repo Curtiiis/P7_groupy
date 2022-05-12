@@ -12,10 +12,8 @@ Report.create = (data, result) => {
 };
 
 Report.getAll = (result) => {
-  db.query("SELECT postId, userId FROM `saves` ORDER BY createdAt DESC", (err, res) => {
-    if (err) { return result(err, null) };
-    if (res.length === 0) { return result(null, null) };
-    return result(null, res)
+  db.query("SELECT * FROM `posts_reports` ORDER BY createdAt DESC", (err, res) => {
+    (err) ? result(err, null) : result(null, res)
   })
 };
 
