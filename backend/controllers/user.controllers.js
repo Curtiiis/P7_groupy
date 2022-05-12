@@ -201,30 +201,24 @@ exports.changePassword = (req, res, next) => {
 };
 
 exports.updatePicture = (req, res, next) => {
-  db.query(
-    "SELECT id AS userId,picture FROM `users` WHERE `users`.`id` = ?",
-    [req.params.id],
-    (err, data) => {
-      if (err) {
-        return res.status(400).json({ message: 'Error in request !' });
-      }
-      if (data[0].userId != req.auth.userId && req.auth.isAdmin == 0) {
-        res.status(403).json({ message: 'Unauthorized request !' });
-      } else {
-        const filename = data[0].picture.split('/images/')[1]
-        if (filename != 'pp-d1.png') {
-          fs.unlinkSync(`images/${filename}`);
-        }
-        Picture.update(
-          [`${req.protocol}://${req.get('host')}/images/${req.file.filename}`, req.auth.userId], (err, picture) => {
-            if (err) {
-              console.log(err)
-              return res.status(400).json(err)
-            }
-            res.status(200).json(picture[0]);
-          })
-      }
-    })
+  User.getCurrent([req.params.id], (err, data) => {
+    if (err) {
+      return res.status(400).json({ message: 'Error in request !' });
+    }
+    if (data[0].userId != req.auth.userId && req.auth.isAdmin == 0) {
+      return res.status(403).json({ message: 'Unauthorized request !' });
+    }
+    const filename = data[0].picture.split('/images/')[1]
+    if (filename != 'pp-d1.png') {
+      fs.unlinkSync(`images/${filename}`);
+    }
+    Picture.update(
+      [`${req.protocol}://${req.get('host')}/images/${req.file.filename}`, req.auth.userId], (err, picture) => {
+        (err)
+          ? res.status(400).json({ message: 'Bad request !' })
+          : res.status(200).json(picture[0]);
+      })
+  })
 };
 
 exports.disableUser = (req, res, next) => {
