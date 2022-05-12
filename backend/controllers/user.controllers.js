@@ -119,23 +119,20 @@ exports.getCurrentUser = (req, res) => {
 };
 
 exports.getfollowers = (req, res, next) => {
-  db.query("SELECT userId,picture,pseudo FROM `users_follows` WHERE followId = ?",
-    [req.auth.userId], (err, data) => {
-      let dataFollowers = data;
+  Follow.getWholeFollowersFromUser([req.auth.userId], (err, dataFollowers) => {
+    if (err) throw err
+    Follow.getAllFollows((err, dataFollows) => {
       if (err) throw err
-      db.query("SELECT userId, followId FROM `follows`",
-        (err, dataFollows) => {
-          if (err) throw err
-          for (let item of dataFollowers) {
-            item.link = item.pseudo.toLowerCase().replace(" ", "-")
-            item.followed = dataFollows
-              .filter(x => x.followId == item.userId)
-              .map(y => y.userId)
-              .includes(req.auth.userId)
-          }
-          res.status(200).json(dataFollowers)
-        })
+      for (let item of dataFollowers) {
+        item.link = item.pseudo.toLowerCase().replace(" ", "-")
+        item.followed = dataFollows
+          .filter(x => x.followId == item.userId)
+          .map(y => y.userId)
+          .includes(req.auth.userId)
+      }
+      res.status(200).json(dataFollowers)
     })
+  })
 }
 
 exports.getSuggestions = (req, res, next) => {

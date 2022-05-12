@@ -25,4 +25,10 @@ Follow.getFollowsFromUser = (data, result) => {
   })
 };
 
+Follow.getWholeFollowersFromUser = (data, result) => {
+  db.query("SELECT userId,picture,pseudo FROM `users_follows` WHERE followId = ?", data, (err, res) => {
+    (err) ? result(err, null) : result(null, res)
+  })
+};
+
 module.exports = Follow;
