@@ -222,24 +222,19 @@ exports.updatePicture = (req, res, next) => {
 };
 
 exports.disableUser = (req, res, next) => {
-  db.query(
-    "SELECT id AS userId,isActive FROM `users` WHERE `users`.`id` = ?",
-    [req.params.id],
-    (err, data) => {
-      if (err) {
-        return res.status(400).json({ message: 'Bad request !' });
-      }
-      if (data[0].userId != req.auth.userId && req.auth.isAdmin == 0) {
-        return res.status(403).json({ message: 'Unauthorized request !' });
-      }
-      db.query(
-        'UPDATE users SET isActive = 0 WHERE id = ?',
-        [req.params.id],
-        (err, response) => {
-          if (err) throw err;
-          res.status(200).json(response)
-        })
+  User.getUserById([req.params.id], (err, data) => {
+    if (err) {
+      return res.status(400).json({ message: 'Bad request !' });
+    }
+    if (data.id != req.auth.userId && req.auth.isAdmin == 0) {
+      return res.status(403).json({ message: 'Unauthorized request !' });
+    }
+    User.disableUser([req.params.id], (err, response) => {
+      (err)
+        ? res.status(400).json({ message: 'Bad request !' })
+        : res.status(200).json(response);
     })
+  })
 };
 
 exports.changeAdminStatus = (req, res, next) => {

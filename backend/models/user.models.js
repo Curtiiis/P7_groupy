@@ -72,5 +72,11 @@ User.getSuggestions = (data, result) => {
   })
 };
 
+User.disableUser = (data, result) => {
+  db.query("UPDATE users SET isActive = 0 WHERE id = ?", data, (err, res) => {
+    (err) ? result(err, null) : result(null, res)
+  })
+};
+
 module.exports = User;
 
