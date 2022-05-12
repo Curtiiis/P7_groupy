@@ -115,9 +115,6 @@ export default {
         ? (submitBtn.disabled = false)
         : (submitBtn.disabled = true);
     },
-    // enablePublish() {
-    //   document.querySelector('.publish-btn').disabled = false;
-    // },
     resetCreateState() {
       this.newPost = {
         title: '',

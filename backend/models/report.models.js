@@ -1,17 +1,19 @@
 const db = require('../config/db');
 
 const Report = function (post) {
-  this.postId = post.postId,
-    this.userId = post.userId
+  this.postId = post.postId;
+  this.userId = post.userId;
 }
 
-Report.create = (newReport, result) => {
-  db.query("INSERT INTO `reports` SET ?", newReport, (err, res) => {
-    if (err) {
-      result(err, null);
-      return;
-    }
-    result(null, newReport)
+Report.create = (data, result) => {
+  db.query("INSERT INTO `reports` SET ?", data, (err, res) => {
+    (err) ? result(err, null) : result(null, res)
+  });
+};
+
+Report.getByPostIdAndUserId = (data, result) => {
+  db.query("SELECT userId FROM `reports` WHERE postId = ? AND userId = ?", data, (err, res) => {
+    (err) ? result(err, null) : result(null, res)
   });
 };
 

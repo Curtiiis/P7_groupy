@@ -9,44 +9,6 @@ const Report = require('../models/report.models');
 const Follow = require('../models/follow.models');
 const Comment = require('../models/comment.models');
 
-function completeDataArray(userIdAuth, array1, array2, array3, array4, array5) {
-  for (let item of array1) {
-    if (array1.length == 1) {
-      item.notMyself = array1[0].userId != userIdAuth;
-      item.likes = array2.length;
-      item.liked = array2.map(x => x.userId).includes(userIdAuth);
-      item.saves = array3.length;
-      item.saved = array3.map(x => x.userId).includes(userIdAuth);
-      item.follows = array4;
-      item.followed = array4.map(x => x.userId).includes(userIdAuth);
-      item.comments = array5;
-      item.commentsCount = array5.length;
-      for (let comment of array5) {
-        comment.updating = false;
-        comment.updated = Number(comment.createdAt) !== Number(comment.updatedAt)
-      }
-    } else {
-      item.notMyself = item.userId != userIdAuth;
-      item.link = item.pseudo.toLowerCase().replace(" ", "-");
-      item.updated = Number(item.createdAt) !== Number(item.updatedAt);
-      item.likes = array2.filter(x => x.postId == item.postId).map(y => y.userId).length;
-      item.liked = array2.filter(x => x.postId == item.postId).map(y => y.userId).includes(userIdAuth);
-      item.saves = array3.filter(x => x.postId == item.postId).map(y => y.userId).length;
-      item.saved = array3.filter(x => x.postId == item.postId).map(y => y.userId).includes(userIdAuth);
-      item.follows = array4.filter(x => x.followId == item.userId).map(y => y.userId);
-      item.followed = array4.filter(x => x.followId == item.userId).map(y => y.userId).includes(userIdAuth);
-      let commentsArray = array5.filter(x => x.postId == item.postId);
-      item.comments = commentsArray;
-      item.commentsCount = commentsArray.length;
-      for (let comment of commentsArray) {
-        comment.updating = false;
-        comment.updated = Number(comment.createdAt) !== Number(comment.updatedAt)
-      }
-    }
-    item.commentText = "";
-  }
-}
-
 // CRUD POSTS
 exports.createPost = (req, res, next) => {
   if (!req.file && req.body.title == '' && req.body.text == '') {
@@ -80,6 +42,7 @@ exports.createPost = (req, res, next) => {
 exports.getAllPosts = (req, res, next) => {
 
   Post.getLastByFive(Number([req.params.number]), (err, dataArray) => {
+    const userIdAuth = req.auth.userId;
     if (err) throw err
     Like.getAllLikes((err, dataLikes) => {
       if (err) throw err
@@ -90,8 +53,25 @@ exports.getAllPosts = (req, res, next) => {
           Comment.getAllComments((err, dataComments) => {
             if (err) throw err
 
-            completeDataArray(
-              req.auth.userId, dataArray, dataLikes, dataSaves, dataFollows, dataComments)
+            for (let item of dataArray) {
+              item.notMyself = item.userId != userIdAuth;
+              item.link = item.pseudo.toLowerCase().replace(" ", "-");
+              item.updated = Number(item.createdAt) !== Number(item.updatedAt);
+              item.likes = dataLikes.filter(x => x.postId == item.postId).map(y => y.userId).length;
+              item.liked = dataLikes.filter(x => x.postId == item.postId).map(y => y.userId).includes(userIdAuth);
+              item.saves = dataSaves.filter(x => x.postId == item.postId).map(y => y.userId).length;
+              item.saved = dataSaves.filter(x => x.postId == item.postId).map(y => y.userId).includes(userIdAuth);
+              item.follows = dataFollows.filter(x => x.followId == item.userId).map(y => y.userId);
+              item.followed = dataFollows.filter(x => x.followId == item.userId).map(y => y.userId).includes(userIdAuth);
+              let commentsArray = dataComments.filter(x => x.postId == item.postId);
+              item.comments = commentsArray;
+              item.commentsCount = commentsArray.length;
+              item.commentText = "";
+              for (let comment of commentsArray) {
+                comment.updating = false;
+                comment.updated = Number(comment.createdAt) !== Number(comment.updatedAt)
+              }
+            }
             res.status(200).json(dataArray)
           })
         })
@@ -115,8 +95,22 @@ exports.getOnePost = (req, res) => {
           Comment.getByPostId(values, (err, dataComments) => {
             if (err) throw err
 
-            completeDataArray(
-              userIdAuth, dataArray, dataLikes, dataSaves, dataFollows, dataComments)
+            for (let item of dataArray) {
+              item.notMyself = dataArray[0].userId != userIdAuth;
+              item.likes = dataLikes.length;
+              item.liked = dataLikes.map(x => x.userId).includes(userIdAuth);
+              item.saves = dataSaves.length;
+              item.saved = dataSaves.map(x => x.userId).includes(userIdAuth);
+              item.follows = dataFollows;
+              item.followed = dataFollows.map(x => x.userId).includes(userIdAuth);
+              item.comments = dataComments;
+              item.commentsCount = dataComments.length;
+              item.commentText = "";
+              for (let comment of dataComments) {
+                comment.updating = false;
+                comment.updated = Number(comment.createdAt) !== Number(comment.updatedAt)
+              }
+            }
             res.status(200).json(dataArray)
           })
         })
@@ -191,33 +185,29 @@ exports.getSaves = (req, res, next) => {
 }
 
 exports.savePost = (req, res, next) => {
-  let sql = "SELECT userId FROM `saves` WHERE postId = ? AND userId = ?";
-  let values = [req.params.id, req.auth.userId]
-  db.query(
-    sql,
-    values,
-    (err, data) => {
-      if (err) throw err
-      let hasBeenSaved = Object.keys(data).length > 0
-      if (hasBeenSaved) {
-        db.query(
-          "DELETE FROM `saves` WHERE postId = ? AND userId = ?",
-          values,
-          (err, data) => {
-            if (err) throw err
-            res.status(200).json({ data, message: 'Post saved !' });
-          })
-      } else {
-        const saveInfo = new Save({
-          userId: req.auth.userId,
-          postId: req.params.id
-        });
-        Save.create(saveInfo, (err, data) => {
-          if (err) throw err
-          res.status(201).json({ data, message: 'Post unsaved !' });
-        });
-      }
-    })
+  let values = [req.params.id, req.auth.userId];
+  const saveInfo = new Save({
+    userId: req.auth.userId,
+    postId: req.params.id
+  });
+
+  Save.getByPostIdAndUserId(values, (err, data) => {
+    if (err) throw err
+    let hasBeenSaved = Object.keys(data).length > 0
+    if (hasBeenSaved) {
+      Save.delete(values, (err, data) => {
+        (err)
+          ? res.status(400).json({ message: 'Bad request !' })
+          : res.status(200).json({ data, message: 'Post unsaved !' });
+      })
+    } else {
+      Save.create(saveInfo, (err, data) => {
+        (err)
+          ? res.status(400).json({ message: 'Bad request !' })
+          : res.status(201).json({ data, message: 'Post saved !' });
+      });
+    }
+  })
 };
 
 // CRUD REPORTS
@@ -233,19 +223,17 @@ exports.getReports = (req, res, next) => {
 }
 
 exports.reportPost = (req, res, next) => {
-  db.query(
-    "SELECT userId FROM `reports` WHERE postId = ? AND userId = ?",
-    [req.params.id, req.body.owner],
+  const report = new Report({
+    postId: req.params.id,
+    userId: req.body.owner
+  });
+  Report.getByPostIdAndUserId([req.params.id, req.body.owner],
     (err, data) => {
       if (err) throw err
       let hasBeenReported = Object.keys(data).length > 0
       if (hasBeenReported) {
         return res.status(201).json({ message: 'Post reported !' });
       }
-      const report = new Report({
-        postId: req.params.id,
-        userId: req.body.owner
-      });
       Report.create(report, (err, data) => {
         if (err) throw err
         return res.status(201).json({ message: 'Post reported !' });
