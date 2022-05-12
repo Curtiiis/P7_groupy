@@ -2,6 +2,7 @@ require('dotenv').config();
 const db = require('../config/db');
 const fs = require('fs');
 const Post = require('../models/post.models');
+const User = require('../models/user.models');
 const Like = require('../models/like.models');
 const Save = require('../models/save.models');
 const Report = require('../models/report.models');
@@ -163,31 +164,20 @@ exports.getStatistics = (req, res, next) => {
   if (req.auth.isAdmin != 1) {
     return res.status(403).json({ message: 'Unauthorized request !' });
   }
-  db.query(
-    `SELECT 
-      COUNT(id) AS users,
-      SUM (CASE WHEN isActive = 1 THEN 1 ELSE 0 END) AS users_actives, 
-      SUM (CASE WHEN isActive = 0 THEN 1 ELSE 0 END) AS users_disabled, 
-      SUM (CASE WHEN isAdmin = 1 THEN 1 ELSE 0 END) AS status_admins, 
-      SUM (CASE WHEN isAdmin = 0 THEN 1 ELSE 0 END) AS status_users 
-      FROM users`,
-    (err, statsUsers) => {
+  User.getUsersStats((err, statsUsers) => {
+    if (err) throw err
+    Post.getCount((err, statsPosts) => {
       if (err) throw err
-      db.query(`SELECT  COUNT(id) AS posts FROM posts`,
-        (err, statsPosts) => {
+      Comment.getCount((err, statsComments) => {
+        if (err) throw err
+        Like.getCount((err, statsLikes) => {
           if (err) throw err
-          db.query(`SELECT  COUNT(id) AS comments FROM comments`,
-            (err, statsComments) => {
-              if (err) throw err
-              db.query(`SELECT  COUNT(id) AS likes FROM likes`,
-                (err, statsLikes) => {
-                  if (err) throw err
-                  Object.assign(statsPosts[0], statsUsers[0], statsComments[0], statsLikes[0])
-                  res.status(200).json(statsPosts[0])
-                })
-            })
+          Object.assign(statsPosts[0], statsUsers[0], statsComments[0], statsLikes[0])
+          res.status(200).json(statsPosts[0])
         })
+      })
     })
+  })
 };
 
 

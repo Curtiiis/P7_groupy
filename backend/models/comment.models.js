@@ -30,6 +30,12 @@ Comment.getByIdAndUserId = (data, result) => {
   })
 };
 
+Comment.getCount = (data, result) => {
+  db.query("SELECT COUNT(id) AS comments FROM comments", data, (err, res) => {
+    (err) ? result(err, null) : result(null, res)
+  })
+};
+
 Comment.modify = (data, result) => {
   db.query("UPDATE `comments` SET text = ? WHERE `comments`.`id` = ?", data, (err, res) => {
     (err) ? result(err, null) : result(null, res)

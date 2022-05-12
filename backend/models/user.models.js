@@ -36,5 +36,17 @@ User.getUserById = (userId, result) => {
   })
 };
 
+User.getUsersStats = (data, result) => {
+  db.query(`SELECT 
+  COUNT(id) AS users,
+  SUM (CASE WHEN isActive = 1 THEN 1 ELSE 0 END) AS users_actives, 
+  SUM (CASE WHEN isActive = 0 THEN 1 ELSE 0 END) AS users_disabled, 
+  SUM (CASE WHEN isAdmin = 1 THEN 1 ELSE 0 END) AS status_admins, 
+  SUM (CASE WHEN isAdmin = 0 THEN 1 ELSE 0 END) AS status_users 
+  FROM users`, data, (err, res) => {
+    (err) ? result(err, null) : result(null, res)
+  })
+};
+
 module.exports = User;
 

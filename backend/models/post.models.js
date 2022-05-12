@@ -31,6 +31,12 @@ Post.getByIdAndUserId = (data, result) => {
   })
 };
 
+Post.getCount = (data, result) => {
+  db.query("SELECT COUNT(id) AS posts FROM posts", data, (err, res) => {
+    (err) ? result(err, null) : result(null, res)
+  })
+};
+
 Post.modify = (data, result) => {
   db.query("UPDATE `posts` SET title = ?, text = ? WHERE `posts`.`id` = ?", data, (err, res) => {
     (err) ? result(err, null) : result(null, res)

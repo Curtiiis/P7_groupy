@@ -27,4 +27,10 @@ Like.getOneByPostId = (data, result) => {
   });
 };
 
+Like.getCount = (data, result) => {
+  db.query("SELECT COUNT(id) AS likes FROM likes", data, (err, res) => {
+    (err) ? result(err, null) : result(null, res)
+  })
+};
+
 module.exports = Like;
