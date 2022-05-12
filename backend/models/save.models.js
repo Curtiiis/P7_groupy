@@ -23,4 +23,10 @@ Save.getAllSaves = (result) => {
   })
 };
 
+Save.getOneByPostId = (data, result) => {
+  db.query("SELECT userId FROM `saves` WHERE postId = ?", data, (err, res) => {
+    (err) ? result(err, null) : result(null, res)
+  });
+};
+
 module.exports = Save;

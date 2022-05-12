@@ -21,4 +21,10 @@ Like.getAllLikes = (result) => {
   })
 };
 
+Like.getOneByPostId = (data, result) => {
+  db.query("SELECT userId FROM `likes` WHERE postId = ?", data, (err, res) => {
+    (err) ? result(err, null) : result(null, res)
+  });
+};
+
 module.exports = Like;

@@ -10,24 +10,39 @@ const Comment = require('../models/comment.models');
 
 function completeDataArray(userIdAuth, array1, array2, array3, array4, array5) {
   for (let item of array1) {
-    item.notMyself = item.userId != userIdAuth;
-    item.link = item.pseudo.toLowerCase().replace(" ", "-");
-    item.updated = Number(item.createdAt) !== Number(item.updatedAt);
-    item.likes = array2.filter(x => x.postId == item.postId).map(y => y.userId).length;
-    item.liked = array2.filter(x => x.postId == item.postId).map(y => y.userId).includes(userIdAuth);
-    item.saves = array3.filter(x => x.postId == item.postId).map(y => y.userId).length;
-    item.saved = array3.filter(x => x.postId == item.postId).map(y => y.userId).includes(userIdAuth);
-    item.follows = array4.filter(x => x.followId == item.userId).map(y => y.userId);
-    item.followed = array4.filter(x => x.followId == item.userId).map(y => y.userId).includes(userIdAuth);
-
-    let commentsArray = array5.filter(x => x.postId == item.postId);
-    item.comments = commentsArray;
-    item.commentsCount = commentsArray.length;
-    item.commentText = "";
-    for (let comment of commentsArray) {
-      comment.updating = false;
-      comment.updated = Number(comment.createdAt) !== Number(comment.updatedAt)
+    if (array1.length == 1) {
+      item.notMyself = array1[0].userId != userIdAuth;
+      item.likes = array2.length;
+      item.liked = array2.map(x => x.userId).includes(userIdAuth);
+      item.saves = array3.length;
+      item.saved = array3.map(x => x.userId).includes(userIdAuth);
+      item.follows = array4;
+      item.followed = array4.map(x => x.userId).includes(userIdAuth);
+      item.comments = array5;
+      item.commentsCount = array5.length;
+      for (let comment of array5) {
+        comment.updating = false;
+        comment.updated = Number(comment.createdAt) !== Number(comment.updatedAt)
+      }
+    } else {
+      item.notMyself = item.userId != userIdAuth;
+      item.link = item.pseudo.toLowerCase().replace(" ", "-");
+      item.updated = Number(item.createdAt) !== Number(item.updatedAt);
+      item.likes = array2.filter(x => x.postId == item.postId).map(y => y.userId).length;
+      item.liked = array2.filter(x => x.postId == item.postId).map(y => y.userId).includes(userIdAuth);
+      item.saves = array3.filter(x => x.postId == item.postId).map(y => y.userId).length;
+      item.saved = array3.filter(x => x.postId == item.postId).map(y => y.userId).includes(userIdAuth);
+      item.follows = array4.filter(x => x.followId == item.userId).map(y => y.userId);
+      item.followed = array4.filter(x => x.followId == item.userId).map(y => y.userId).includes(userIdAuth);
+      let commentsArray = array5.filter(x => x.postId == item.postId);
+      item.comments = commentsArray;
+      item.commentsCount = commentsArray.length;
+      for (let comment of commentsArray) {
+        comment.updating = false;
+        comment.updated = Number(comment.createdAt) !== Number(comment.updatedAt)
+      }
     }
+    item.commentText = "";
   }
 }
 
@@ -62,7 +77,6 @@ exports.createPost = (req, res, next) => {
 };
 
 exports.getAllPosts = (req, res, next) => {
-  const userIdAuth = req.auth.userId;
 
   Post.getLastByFive(Number([req.params.number]), (err, dataArray) => {
     if (err) throw err
@@ -70,13 +84,13 @@ exports.getAllPosts = (req, res, next) => {
       if (err) throw err
       Save.getAllSaves((err, dataSaves) => {
         if (err) throw err
-        Follow.getFollowsFromUser((err, dataFollows) => {
+        Follow.getAllFollows((err, dataFollows) => {
           if (err) throw err
           Comment.getAllComments((err, dataComments) => {
             if (err) throw err
 
             completeDataArray(
-              userIdAuth, dataArray, dataLikes, dataSaves, dataFollows, dataComments)
+              req.auth.userId, dataArray, dataLikes, dataSaves, dataFollows, dataComments)
             res.status(200).json(dataArray)
           })
         })
@@ -89,39 +103,21 @@ exports.getOnePost = (req, res) => {
   const userIdAuth = req.auth.userId;
   let values = req.params.id;
 
-  db.query("SELECT * FROM `posts_users` WHERE postId = ?", values, (err, data) => {
+  Post.getOneByPostId(values, (err, dataArray) => {
     if (err) throw err
-    db.query("SELECT userId FROM `likes` WHERE postId = ?", values, (err, dataLikes) => {
+    Like.getOneByPostId(values, (err, dataLikes) => {
       if (err) throw err
-      db.query("SELECT userId FROM `saves` WHERE postId = ?", values, (err, dataSaves) => {
+      Save.getOneByPostId(values, (err, dataSaves) => {
         if (err) throw err
-        db.query("SELECT userId, followId FROM `follows` WHERE followId = ?", userIdAuth, (err, dataFollows) => {
+        Follow.getFollowsFromUser(userIdAuth, (err, dataFollows) => {
           if (err) throw err
-          db.query("SELECT * FROM `comments_pseudo` WHERE postId = ? ORDER BY createdAt DESC", values,
-            (err, dataComments) => {
-              if (err) throw err
-              for (let comment of dataComments) {
-                comment.updating = false;
-                comment.updated = Number(comment.createdAt) !== Number(comment.updatedAt)
-              }
+          Comment.getByPostId(values, (err, dataComments) => {
+            if (err) throw err
 
-              let onePost = {
-                ...data[0],
-                link: data[0].pseudo.toLowerCase().replace(" ", "-"),
-                updated: Number(data[0].createdAt) !== Number(data[0].updatedAt),
-                likes: dataLikes.length,
-                liked: dataLikes.map(x => x.userId).includes(userIdAuth),
-                saves: dataSaves.length,
-                saved: dataSaves.map(x => x.userId).includes(userIdAuth),
-                follows: dataFollows,
-                followed: dataFollows.map(x => x.userId).includes(userIdAuth),
-                notMyself: data[0].userId != userIdAuth,
-                comments: dataComments,
-                commentsCount: dataComments.length,
-                commentText: ""
-              }
-              res.status(200).json([onePost])
-            })
+            completeDataArray(
+              userIdAuth, dataArray, dataLikes, dataSaves, dataFollows, dataComments)
+            res.status(200).json(dataArray)
+          })
         })
       })
     })

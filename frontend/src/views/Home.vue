@@ -237,7 +237,7 @@ export default {
       utils.showCreateModale(false);
       utils.showAccount(false);
       http
-        .get(`posts/${item.postId}`, this.setAuthorization())
+        .get(`posts/post/${item.postId}`, this.setAuthorization())
         .then((response) => {
           utils.commitPostData(response.data);
           utils.showLoader(false, 300);
@@ -331,6 +331,7 @@ export default {
     ]),
   },
   mounted() {
+    utils.scrollToTop();
     this.getAllPosts();
     this.getCurrentUser();
     this.getSuggestions();
