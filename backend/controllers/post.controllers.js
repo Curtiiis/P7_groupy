@@ -215,11 +215,11 @@ exports.getReports = (req, res, next) => {
   if (req.auth.isAdmin != 1) {
     return res.status(403).json({ message: 'Unauthorized request !' });
   }
-  db.query(
-    "SELECT userId,pseudo,postId,media,title FROM `posts_reports` ORDER BY createdAt DESC", (err, data) => {
-      if (err) throw err;
-      res.status(200).json(data)
-    })
+  Report.getAll((err, data) => {
+    (err)
+      ? res.status(400).json({ message: 'Bad request !' })
+      : res.status(200).json(data);
+  })
 }
 
 exports.reportPost = (req, res, next) => {
