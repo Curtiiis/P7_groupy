@@ -28,7 +28,7 @@ exports.getAllUsers = (req, res, next) => {
 exports.getOneUser = (req, res) => {
   const userIdAuth = req.auth.userId;
   const values = [req.params.id]
-  Post.getOneByUserId(values, (err, dataArray) => {
+  Post.getAllFromUser(values, (err, dataArray) => {
     if (err) throw err
     if (dataArray == '') {
       User.getUserById(values, (err, dataArray) => {
@@ -73,7 +73,7 @@ exports.getOneUser = (req, res) => {
 };
 
 exports.searchUser = (req, res) => {
-  User.getSearchedUsers([req.auth.userId, `${req.params.id}%`], (err, data) => {
+  User.getByPseudo([req.auth.userId, `${req.params.id}%`], (err, data) => {
     if (err) throw err
     for (let item of data) {
       item.link = item.pseudo.toLowerCase().replace(" ", "-")
@@ -87,46 +87,35 @@ exports.getCurrentUser = (req, res) => {
     return res.status(403).json({ message: 'Unauthorized request !' });
   }
   let values = [req.auth.userId];
-  db.query(
-    "SELECT id AS userId, pseudo,picture,email,isAdmin,isActive FROM `users` WHERE `users`.`id` = ?",
-    values,
-    (err, dataUser) => {
+  User.getCurrent(values, (err, dataUser) => {
+    if (err) throw err
+    Follow.getFollowsFromUser(values, (err, dataFollowers) => {
       if (err) throw err
-      db.query(
-        "SELECT userId FROM `follows` WHERE followId = ?",
-        values, (err, dataFollowers) => {
+      Save.getSavesFromUser(values, (err, dataSaves) => {
+        if (err) throw err
+        Like.getCountFromUser(values, (err, dataLikes) => {
           if (err) throw err
-          db.query(
-            "SELECT postId,pseudo,title,media FROM `posts_saves` WHERE userId = ? ORDER BY createdAt DESC",
-            values, (err, dataSaves) => {
-              if (err) throw err
-              db.query(
-                "SELECT COUNT(userId) AS likesCount FROM `users_likes` WHERE postOwner = ?",
-                values, (err, dataLikes) => {
-                  if (err) throw err
-                  db.query(
-                    "SELECT COUNT(id) AS postsCount FROM `posts` WHERE userId = ?",
-                    values, (err, dataPosts) => {
-                      if (err) throw err
+          Comment.getCountFromUser(values, (err, dataPosts) => {
+            if (err) throw err
 
-                      let userInfos = {
-                        ...dataUser[0],
-                        email: dataUser[0].email,
-                        followers: dataFollowers.map(x => x.userId),
-                        followersCount: dataFollowers.map(x => x.userId).length,
-                        likes: dataLikes[0].likesCount,
-                        link: dataUser[0].pseudo.toLowerCase().replace(" ", "-"),
-                        picture: dataUser[0].picture,
-                        posts: dataPosts[0].postsCount,
-                        pseudo: dataUser[0].pseudo,
-                        userId: dataUser[0].userId
-                      };
-                      res.status(200).json({ userInfos: userInfos, dataSaves, dataSaves })
-                    })
-                })
-            })
+            let userInfos = {
+              ...dataUser[0],
+              email: dataUser[0].email,
+              followers: dataFollowers.map(x => x.userId),
+              followersCount: dataFollowers.map(x => x.userId).length,
+              likes: dataLikes[0].likesCount,
+              link: dataUser[0].pseudo.toLowerCase().replace(" ", "-"),
+              picture: dataUser[0].picture,
+              posts: dataPosts[0].postsCount,
+              pseudo: dataUser[0].pseudo,
+              userId: dataUser[0].userId
+            };
+            res.status(200).json({ userInfos: userInfos, dataSaves, dataSaves })
+          })
         })
+      })
     })
+  })
 };
 
 exports.getfollowers = (req, res, next) => {

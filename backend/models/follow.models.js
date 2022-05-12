@@ -21,9 +21,7 @@ Follow.getAllFollows = (result) => {
 
 Follow.getFollowsFromUser = (data, result) => {
   db.query("SELECT userId, followId FROM `follows` WHERE followId = ?", data, (err, res) => {
-    if (err) { return result(err, null) };
-    if (res.length === 0) { return result(null, null) };
-    return result(null, res)
+    (err) ? result(err, null) : result(null, res)
   })
 };
 

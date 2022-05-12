@@ -42,7 +42,13 @@ User.getUserById = (userId, result) => {
   })
 };
 
-User.getSearchedUsers = (data, result) => {
+User.getCurrent = (data, result) => {
+  db.query("SELECT id AS userId, pseudo,picture,email,isAdmin,isActive FROM `users` WHERE `users`.`id` = ?", data, (err, res) => {
+    (err) ? result(err, null) : result(null, res)
+  })
+};
+
+User.getByPseudo = (data, result) => {
   db.query("SELECT id AS userId,picture,pseudo FROM `users` WHERE id <> ? AND pseudo like ?", data, (err, res) => {
     (err) ? result(err, null) : result(null, res)
   })

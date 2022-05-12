@@ -25,7 +25,7 @@ Post.getOneByPostId = (data, result) => {
   });
 };
 
-Post.getOneByUserId = (data, result) => {
+Post.getAllFromUser = (data, result) => {
   db.query("SELECT * FROM `posts_users` WHERE userId = ?", data, (err, res) => {
     (err) ? result(err, null) : result(null, res)
   });

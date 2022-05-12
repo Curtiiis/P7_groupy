@@ -41,6 +41,12 @@ Like.getCount = (data, result) => {
   })
 };
 
+Like.getCountFromUser = (data, result) => {
+  db.query("SELECT COUNT(userId) AS likesCount FROM `users_likes` WHERE postOwner = ?", data, (err, res) => {
+    (err) ? result(err, null) : result(null, res)
+  })
+};
+
 Like.delete = (data, result) => {
   db.query("DELETE FROM `likes` WHERE postId = ? AND userId = ?", data, (err, res) => {
     (err) ? result(err, null) : result(null, res)

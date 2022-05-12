@@ -36,6 +36,12 @@ Comment.getCount = (data, result) => {
   })
 };
 
+Comment.getCountFromUser = (data, result) => {
+  db.query("SELECT COUNT(id) AS postsCount FROM `posts` WHERE userId = ?", data, (err, res) => {
+    (err) ? result(err, null) : result(null, res)
+  })
+};
+
 Comment.modify = (data, result) => {
   db.query("UPDATE `comments` SET text = ? WHERE `comments`.`id` = ?", data, (err, res) => {
     (err) ? result(err, null) : result(null, res)

@@ -25,6 +25,12 @@ Save.getOneByPostId = (data, result) => {
   });
 };
 
+Save.getSavesFromUser = (data, result) => {
+  db.query("SELECT postId,pseudo,title,media FROM `posts_saves` WHERE userId = ? ORDER BY createdAt DESC", data, (err, res) => {
+    (err) ? result(err, null) : result(null, res)
+  });
+};
+
 Save.getFromUser = (data, result) => {
   db.query("SELECT userId FROM `users_saves` WHERE postOwner = ?", data, (err, res) => {
     (err) ? result(err, null) : result(null, res)
