@@ -42,6 +42,12 @@ User.getUserById = (userId, result) => {
   })
 };
 
+User.getSearchedUsers = (data, result) => {
+  db.query("SELECT id AS userId,picture,pseudo FROM `users` WHERE id <> ? AND pseudo like ?", data, (err, res) => {
+    (err) ? result(err, null) : result(null, res)
+  })
+};
+
 User.getUsersStats = (data, result) => {
   db.query(`SELECT 
   COUNT(id) AS users,

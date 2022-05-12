@@ -73,17 +73,11 @@ exports.getOneUser = (req, res) => {
 };
 
 exports.searchUser = (req, res) => {
-  let sql = "SELECT id AS userId,picture,pseudo FROM `users` WHERE id <> ? AND pseudo like ?";
-  let values = [req.auth.userId, `${req.params.id}%`]
-
-  db.query(sql, values, (err, data) => {
+  User.getSearchedUsers([req.auth.userId, `${req.params.id}%`], (err, data) => {
     if (err) throw err
-    let dataArray = data;
-
-    for (let item of dataArray) {
+    for (let item of data) {
       item.link = item.pseudo.toLowerCase().replace(" ", "-")
     }
-
     res.status(200).json(data)
   })
 };
