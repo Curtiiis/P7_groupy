@@ -11,6 +11,12 @@ Follow.create = (newFollow, result) => {
   });
 };
 
+Follow.isFollowed = (data, result) => {
+  db.query("SELECT userId FROM `follows` WHERE userId = ? AND followId = ?", data, (err, res) => {
+    (err) ? result(err, null) : result(null, res)
+  })
+};
+
 Follow.getAllFollows = (result) => {
   db.query("SELECT userId, followId FROM `follows`", (err, res) => {
     if (err) { return result(err, null) };
@@ -27,6 +33,12 @@ Follow.getFollowsFromUser = (data, result) => {
 
 Follow.getWholeFollowersFromUser = (data, result) => {
   db.query("SELECT userId,picture,pseudo FROM `users_follows` WHERE followId = ?", data, (err, res) => {
+    (err) ? result(err, null) : result(null, res)
+  })
+};
+
+Follow.delete = (data, result) => {
+  db.query("DELETE FROM `follows` WHERE userId = ? AND followId = ?", data, (err, res) => {
     (err) ? result(err, null) : result(null, res)
   })
 };

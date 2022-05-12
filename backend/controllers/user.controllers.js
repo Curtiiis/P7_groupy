@@ -159,31 +159,28 @@ exports.getSuggestions = (req, res, next) => {
 
 // POST
 exports.followUser = (req, res, next) => {
-  db.query(
-    "SELECT userId FROM `follows` WHERE userId = ? AND followId = ?",
-    [req.auth.userId, req.params.id],
-    (err, data) => {
-      if (err) throw err
-      let hasBeenFollowed = Object.keys(data).length > 0
-      if (hasBeenFollowed) {
-        db.query(
-          "DELETE FROM `follows` WHERE userId = ? AND followId = ?",
-          [req.auth.userId, req.params.id],
-          (err, data) => {
-            if (err) throw err
-            res.status(200).json({ message: 'Follow retiré !' });
-          })
-      } else {
-        const followInfo = new Follow({
-          userId: req.auth.userId,
-          followId: req.params.id
-        });
-        Follow.create(followInfo, (err, data) => {
-          if (err) throw err
-          res.status(201).json({ message: 'Follow ajouté !' });
-        });
-      }
-    })
+  const followInfo = new Follow({
+    userId: req.auth.userId,
+    followId: req.params.id
+  });
+
+  Follow.isFollowed([req.auth.userId, req.params.id], (err, data) => {
+    if (err) throw err
+    let hasBeenFollowed = Object.keys(data).length > 0
+    if (hasBeenFollowed) {
+      Follow.delete([req.auth.userId, req.params.id], (err, data) => {
+        (err)
+          ? res.status(400).json({ message: 'Bad request !' })
+          : res.status(200).json({ data, message: 'Follow deleted !' });
+      })
+    } else {
+      Follow.create(followInfo, (err, data) => {
+        (err)
+          ? res.status(400).json({ message: 'Bad request !' })
+          : res.status(201).json({ data, message: 'Follow added !' });
+      });
+    }
+  })
 };
 
 // PUT
