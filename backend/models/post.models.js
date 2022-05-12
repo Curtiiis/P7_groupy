@@ -25,14 +25,16 @@ Post.getOneByPostId = (data, result) => {
   });
 };
 
-// Post.update = (data, result) => {
-//   db.query("UPDATE `posts` SET title = ?, text = ?, media = ? WHERE `posts`.`id` = ?", data, (err, res) => {
-//     if (err) {
-//       result(err, null);
-//       return;
-//     }
-//     result(null, data)
-//   });
-// };
+Post.getByIdAndUserId = (data, result) => {
+  db.query("SELECT userId FROM `posts` WHERE `posts`.`id` = ? AND `posts`.`userId` = ?", data, (err, res) => {
+    (err) ? result(err, null) : result(null, res)
+  })
+};
+
+Post.modify = (data, result) => {
+  db.query("UPDATE `posts` SET title = ?, text = ? WHERE `posts`.`id` = ?", data, (err, res) => {
+    (err) ? result(err, null) : result(null, res)
+  })
+};
 
 module.exports = Post;

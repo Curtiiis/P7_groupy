@@ -125,24 +125,18 @@ exports.getOnePost = (req, res) => {
 };
 
 exports.modifyPost = (req, res, next) => {
-  db.query(
-    "SELECT userId,media FROM `posts` WHERE `posts`.`id` = ?",
-    [req.params.id],
+  Post.getByIdAndUserId([req.params.id, req.auth.userId],
     (err, data) => {
       if (err) {
         return res.status(400).json({ message: 'Bad request !' });
       }
-      if (data[0].userId != req.auth.userId && req.auth.isAdmin == 0) {
-        return res.status(403).json({ message: 'Unauthorized request !' });
+      if (data == '' && req.auth.isAdmin == 0) {
+        return res.status(401).json({ message: 'Unauthorized request !' })
       }
-
-      db.query(
-        "UPDATE `posts` SET title = ?, text = ? WHERE `posts`.`id` = ?",
-        [req.body.title, req.body.text, req.params.id],
-        (err, response) => {
-          if (err) throw err;
-          res.status(200).json(response)
-        })
+      Post.modify([req.body.title, req.body.text, req.params.id], (err, response) => {
+        if (err) throw err;
+        res.status(200).json(response)
+      })
     })
 };
 
