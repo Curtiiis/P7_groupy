@@ -23,4 +23,10 @@ Report.getByPostIdAndUserId = (data, result) => {
   });
 };
 
+Report.delete = (data, result) => {
+  db.query("DELETE FROM `reports` WHERE postId = ?", data, (err, res) => {
+    (err) ? result(err, null) : result(null, res)
+  })
+};
+
 module.exports = Report;

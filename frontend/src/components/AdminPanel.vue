@@ -107,6 +107,7 @@
 import http from '../js/http';
 import {mapState, mapGetters} from 'vuex';
 import * as utils from '../js/utils';
+import EventBus from '../js/event-bus';
 
 export default {
   name: 'Account',
@@ -139,6 +140,10 @@ export default {
           Authorization: 'Bearer ' + this.token,
         },
       };
+    },
+
+    deletePost(report) {
+      EventBus.$emit('deletePost', report);
     },
 
     deleteReport(report) {

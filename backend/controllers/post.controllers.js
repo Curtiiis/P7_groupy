@@ -245,13 +245,11 @@ exports.deleteReport = (req, res, next) => {
   if (req.auth.isAdmin != 1) {
     return res.status(403).json({ message: 'Unauthorized request !' });
   }
-  db.query(
-    "DELETE FROM `reports` WHERE postId = ?",
-    [req.params.id],
-    (err, data) => {
-      if (err) throw err
-      res.status(200).json({ message: 'Report deleted !' });
-    })
+  Report.delete([req.params.id], (err, data) => {
+    (err)
+      ? res.status(400).json({ message: 'Bad request !' })
+      : res.status(200).json({ message: 'Report deleted !' });
+  })
 };
 
 //LIKES
