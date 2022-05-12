@@ -23,8 +23,20 @@ Like.getOneByPostId = (data, result) => {
   });
 };
 
+Like.getByPostIdAndUserId = (data, result) => {
+  db.query("SELECT userId FROM `likes` WHERE postId = ? AND userId = ?", data, (err, res) => {
+    (err) ? result(err, null) : result(null, res)
+  });
+};
+
 Like.getCount = (data, result) => {
   db.query("SELECT COUNT(id) AS likes FROM likes", data, (err, res) => {
+    (err) ? result(err, null) : result(null, res)
+  })
+};
+
+Like.delete = (data, result) => {
+  db.query("DELETE FROM `likes` WHERE postId = ? AND userId = ?", data, (err, res) => {
     (err) ? result(err, null) : result(null, res)
   })
 };
