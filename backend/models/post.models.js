@@ -9,7 +9,7 @@ const Post = function (post) {
 
 Post.create = (data, result) => {
   db.query("INSERT INTO posts SET ?", data, (err, res) => {
-    (err) ? result(err, null) : result(null, data)
+    (err) ? result(err, null) : result(null, res)
   });
 };
 
@@ -33,6 +33,12 @@ Post.getByIdAndUserId = (data, result) => {
 
 Post.modify = (data, result) => {
   db.query("UPDATE `posts` SET title = ?, text = ? WHERE `posts`.`id` = ?", data, (err, res) => {
+    (err) ? result(err, null) : result(null, res)
+  })
+};
+
+Post.delete = (data, result) => {
+  db.query("DELETE FROM `posts` WHERE `posts`.`id` = ?", data, (err, res) => {
     (err) ? result(err, null) : result(null, res)
   })
 };

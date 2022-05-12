@@ -141,38 +141,22 @@ exports.modifyPost = (req, res, next) => {
 };
 
 exports.deletePost = (req, res, next) => {
-  let values = [req.params.id]
-  db.query(
-    "SELECT userId,media FROM `posts` WHERE id = ?",
-    values,
-    (err, data) => {
-      if (err) {
-        return res.status(400).json({ message: 'Error in request !' });
-      }
-      if (data[0].userId != req.auth.userId && req.auth.isAdmin == 0) {
-        res.status(403).json({ message: 'Unauthorized request !' });
-      } else {
-        if (data[0].media != null) {
-          const filename = data[0].media.split('/images/')[1]
-          db.query(
-            "DELETE FROM `posts` WHERE id = ?",
-            values,
-            (err, data) => {
-              if (err) throw err
-              fs.unlinkSync(`images/${filename}`);
-              res.status(200).json({ message: 'Post deleted !' });
-            })
-        } else {
-          db.query(
-            "DELETE FROM `posts` WHERE id = ?",
-            values,
-            (err, data) => {
-              if (err) throw err
-              res.status(200).json({ message: 'Post deleted !' });
-            })
-        }
-      }
+  Post.getByIdAndUserId([req.params.id, req.auth.userId], (err, data) => {
+    if (err) {
+      return res.status(400).json({ message: 'Error in request !' });
+    }
+    if (data == '' && req.auth.isAdmin == 0) {
+      return res.status(401).json({ message: 'Unauthorized request !' })
+    }
+    if (data[0].media != null) {
+      const filename = data[0].media.split('/images/')[1]
+      fs.unlinkSync(`images/${filename}`);
+    }
+    Post.delete([req.params.id], (err, data) => {
+      if (err) throw err
+      res.status(200).json({ message: 'Post deleted !' });
     })
+  })
 };
 
 exports.getStatistics = (req, res, next) => {
